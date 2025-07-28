@@ -279,48 +279,39 @@
   function getInputValue(id) {
     return parseFloat(document.getElementById(id).value);
   }
+
   function isUnknown(id) {
     return document.getElementById(id).checked;
   }
 
-  // Функция для отображения текущего значения рядом с ползунком
- document.querySelectorAll('.fuzzy-slider').forEach(slider => {
-  const output = slider.parentElement.querySelector('.slider-value');
-  const scaleMin = parseFloat(slider.dataset.scaleMin);
-  const scaleMax = parseFloat(slider.dataset.scaleMax);
-  const unit = slider.dataset.unit;
-
-  function updateValue() {
-    if (slider.disabled) {
-      output.textContent = '—';
-      return;
-    }
-    const val = parseFloat(slider.value);
-    const scaled = scaleMin + val * (scaleMax - scaleMin);
-    output.textContent = `~${scaled.toFixed(1)} ${unit}`;
-  }
-
-  slider.addEventListener('input', updateValue);
-  updateValue();
-});
-
-    // Для консистенции — 0 мягкая, 1 твёрдая, 0.5 средняя
+  function updateCurrentValues() {
     let consVal = getInputValue('consistency');
     let consText = consVal < 0.33 ? 'мягкая' : consVal > 0.66 ? 'твёрдая' : 'средняя';
     document.getElementById('consistencyValue').textContent = consText;
 
-    // Для глаз — 2..10 линейно
     let eyesVal = getInputValue('eyes');
     let eyesNum = Math.round(2 + eyesVal * 8);
     document.getElementById('eyesValue').textContent = eyesNum;
+
+    document.querySelectorAll('.fuzzy-slider').forEach(slider => {
+      const output = slider.parentElement.querySelector('.slider-value');
+      const scaleMin = parseFloat(slider.dataset.scaleMin);
+      const scaleMax = parseFloat(slider.dataset.scaleMax);
+      const unit = slider.dataset.unit;
+
+      const val = parseFloat(slider.value);
+      const scaled = scaleMin + val * (scaleMax - scaleMin);
+      output.textContent = `~${scaled.toFixed(1)} ${unit}`;
+      output.style.left = `calc(${val * 100}% )`;
+    });
   }
 
   function update() {
     updateCurrentValues();
 
     const userInput = {
-      length: getInputValue('bodyLength'),
-      lengthUnknown: isUnknown('bodyLengthUnknown'),
+      bodyLength: getInputValue('bodyLength'),
+      bodyLengthUnknown: isUnknown('bodyLengthUnknown'),
       consistency: getInputValue('consistency'),
       consistencyUnknown: isUnknown('consistencyUnknown'),
       eyes: getInputValue('eyes'),
@@ -328,7 +319,7 @@
     };
 
     let traitsToCheck = [];
-    if (!userInput.lengthUnknown) traitsToCheck.push('length');
+    if (!userInput.bodyLengthUnknown) traitsToCheck.push('bodyLength');
     if (!userInput.consistencyUnknown) traitsToCheck.push('consistency');
     if (!userInput.eyesUnknown) traitsToCheck.push('eyes');
 
@@ -354,21 +345,8 @@
   }
 
   form.addEventListener('input', update);
+  document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.addEventListener('change', update));
   window.addEventListener('load', update);
-
-  function updateValue() {
-  if (slider.disabled) {
-    output.textContent = '—';
-    return;
-  }
-  const val = parseFloat(slider.value);
-  const scaled = scaleMin + val * (scaleMax - scaleMin);
-  output.textContent = `~${scaled.toFixed(1)} ${unit}`;
-
-  // передвигаем output к текущей позиции ручки
-  const percent = val * 100;
-  output.style.left = `calc(${percent}% )`;
-}
 </script>
 </body>
 </html>
