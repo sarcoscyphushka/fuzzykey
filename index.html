@@ -58,9 +58,9 @@
       border-radius: 6px;
     }
     input[type=range].disabled::-webkit-slider-thumb {
-  background: #aaa;
-  border: 2px solid #888;
-}
+      background: #aaa;
+      border: 2px solid #888;
+    }
     .slider-value {
       position: absolute;
       top: -28px;
@@ -110,10 +110,10 @@
       color: #444;
     }
     .slider-marks span {
-    flex: 1;
-    text-align: center;
-    font-size: 0.8em;
-    margin-top: 6px;
+      flex: 1;
+      text-align: center;
+      font-size: 0.8em;
+      margin-top: 6px;
     }
     .current-value {
       margin-top: 6px;
@@ -145,70 +145,69 @@
   <h1>Fuzzykey-определитель пиявок (Hirudinea) средней полосы Европейской части России</h1>
 
   <form id="keyForm">
-
     <!-- Длина тела -->
-   <div class="slider-group-row">
-  <div class="slider-label">Длина тела</div>
-  <div class="slider-container">
- <input type="range"
-       min="0.3" max="15" step="0.1" value="5"
-       id="bodyLength" class="fuzzy-slider"
-       data-unit="см">
-    <output class="slider-value" for="bodyLength">~7.5 см</output>
-    <div class="slider-marks">
-  <span>0.3</span>
-  <span>1</span>
-  <span>2.5</span>
-  <span>5</span>
-  <span>10</span>
-  <span>15</span>
-</div>
-    <label>
-  <input type="checkbox" id="bodyLengthUnknown" checked>
-  Не знаю
-</label>
-  </div>
-</div>
-
-<!-- Консистенция тела -->
-<div class="slider-group-row">
-  <div class="slider-label">Консистенция тела</div>
-  <div class="slider-container">
-    <input type="range" min="0" max="1" step="0.01" value="0.5" id="consistency" class="fuzzy-slider"
-      data-unit="" data-scale-min="0" data-scale-max="1">
-    <output class="slider-value" for="consistency">средняя</output>
-    <div class="slider-marks">
-      <span>мягкая</span>
-      <span>средняя</span>
-      <span>твёрдая</span>
+    <div class="slider-group-row">
+      <div class="slider-label">Длина тела</div>
+      <div class="slider-container">
+        <input type="range"
+               min="0.3" max="15" step="0.1" value="5"
+               id="bodyLength" class="fuzzy-slider"
+               data-unit="см">
+        <output class="slider-value" for="bodyLength">~5.0 см</output>
+        <div class="slider-marks">
+          <span>0.3</span>
+          <span>1</span>
+          <span>2.5</span>
+          <span>5</span>
+          <span>10</span>
+          <span>15</span>
+        </div>
+        <label>
+          <input type="checkbox" id="bodyLengthUnknown" checked>
+          Не знаю
+        </label>
+      </div>
     </div>
-    <label>
-  <input type="checkbox" id="consistencyUnknown" checked>
-  Не знаю
-</label>
-  </div>
-</div>
+
+    <!-- Консистенция тела -->
+    <div class="slider-group-row">
+      <div class="slider-label">Консистенция тела</div>
+      <div class="slider-container">
+        <input type="range" min="0" max="1" step="0.01" value="0.5" id="consistency" class="fuzzy-slider"
+               data-unit="" data-scale-min="0" data-scale-max="1">
+        <output class="slider-value" for="consistency">средняя</output>
+        <div class="slider-marks">
+          <span>мягкая</span>
+          <span>средняя</span>
+          <span>твёрдая</span>
+        </div>
+        <label>
+          <input type="checkbox" id="consistencyUnknown" checked>
+          Не знаю
+        </label>
+      </div>
+    </div>
 
     <!-- Количество глаз -->
-<div class="slider-group-row">
-  <div class="slider-label">Число глаз</div>
-  <div class="slider-container">
-    <input type="range" min="0" max="1" step="0.01" value="0.5" id="eyes" class="fuzzy-slider"
-      data-unit="" data-scale-min="2" data-scale-max="10">
-    <output class="slider-value" for="eyes">6</output>
-    <div class="slider-marks">
-      <span>2</span>
-      <span>4</span>
-      <span>6</span>
-      <span>8</span>
-      <span>10</span>
+    <div class="slider-group-row">
+      <div class="slider-label">Число глаз</div>
+      <div class="slider-container">
+        <input type="range" min="0" max="1" step="0.01" value="0.5" id="eyes" class="fuzzy-slider"
+               data-unit="" data-scale-min="2" data-scale-max="10">
+        <output class="slider-value" for="eyes">6</output>
+        <div class="slider-marks">
+          <span>2</span>
+          <span>4</span>
+          <span>6</span>
+          <span>8</span>
+          <span>10</span>
+        </div>
+        <label>
+          <input type="checkbox" id="eyesUnknown" checked>
+          Не знаю
+        </label>
+      </div>
     </div>
-    <label>
-  <input type="checkbox" id="eyesUnknown" checked>
-  Не знаю
-</label>
-  </div>
-</div>
   </form>
 
   <div class="result" id="result">
@@ -218,17 +217,17 @@
 
 <script>
   const leeches = [
-  { name: 'Helobdella stagnalis', bodyLength: 0.5, consistency: 0.5, eyes: 0 },
-  { name: 'Alboglossiphonia heteroclita', bodyLength: 0.5, consistency: 0.5, eyes: 0.6 },
-  { name: 'Theromyzon tessulatum', bodyLength: 1.5, consistency: 0, eyes: 0.75 },
-  { name: 'Hemiclepsis marginata', bodyLength: 1.5, consistency: 0.5, eyes: 0.25 },
-  { name: 'Glossiphonia complanata', bodyLength: 1.5, consistency: 1, eyes: 0.6 },
-  { name: 'Piscicola geometra', bodyLength: 1.5, consistency: 0.5, eyes: 0.25 },
-  { name: 'Erpobdella octoculata', bodyLength: 4, consistency: 0.5, eyes: 0.75 },
-  { name: 'Erpobdella nigricollis', bodyLength: 4, consistency: 0.5, eyes: 0.75 },
-  { name: 'Erpobdella lineata', bodyLength:4, consistency: 0.5, eyes: 0.75 },
-  { name: 'Haemopis sanguisuga', bodyLength: 12, consistency: 0.5, eyes: 1 },
-  { name: 'Hirudo medicinalis', bodyLength: 10, consistency: 0.5, eyes: 1 },
+    { name: 'Helobdella stagnalis', bodyLength: 0.5, consistency: 0.5, eyes: 0 },
+    { name: 'Alboglossiphonia heteroclita', bodyLength: 0.5, consistency: 0.5, eyes: 0.6 },
+    { name: 'Theromyzon tessulatum', bodyLength: 1.5, consistency: 0, eyes: 0.75 },
+    { name: 'Hemiclepsis marginata', bodyLength: 1.5, consistency: 0.5, eyes: 0.25 },
+    { name: 'Glossiphonia complanata', bodyLength: 1.5, consistency: 1, eyes: 0.6 },
+    { name: 'Piscicola geometra', bodyLength: 1.5, consistency: 0.5, eyes: 0.25 },
+    { name: 'Erpobdella octoculata', bodyLength: 4, consistency: 0.5, eyes: 0.75 },
+    { name: 'Erpobdella nigricollis', bodyLength: 4, consistency: 0.5, eyes: 0.75 },
+    { name: 'Erpobdella lineata', bodyLength:4, consistency: 0.5, eyes: 0.75 },
+    { name: 'Haemopis sanguisuga', bodyLength: 12, consistency: 0.5, eyes: 1 },
+    { name: 'Hirudo medicinalis', bodyLength: 10, consistency: 0.5, eyes: 1 },
   ];
 
   const form = document.getElementById('keyForm');
@@ -242,91 +241,97 @@
     return document.getElementById(id).checked;
   }
 
-function updateCurrentValues() {
-  document.querySelectorAll('.fuzzy-slider').forEach(slider => {
-    const output = slider.parentElement.querySelector('.slider-value');
-    const unit = slider.dataset.unit || "";
-    const val = parseFloat(slider.value);
+  function updateCurrentValues() {
+    document.querySelectorAll('.fuzzy-slider').forEach(slider => {
+      const output = slider.parentElement.querySelector('.slider-value');
+      const unit = slider.dataset.unit || "";
+      const val = parseFloat(slider.value);
 
-    let displayValue;
-    if (slider.id === "consistency") {
-      displayValue = val < 0.33 ? 'мягкая' : val > 0.66 ? 'твёрдая' : 'средняя';
-    } else if (slider.id === "eyes") {
-      displayValue = Math.round(2 + val * 8).toString();
-    } else {
-      displayValue = `~${val.toFixed(1)} ${unit}`;
-    }
+      let displayValue;
+      if (slider.id === "consistency") {
+        displayValue = val < 0.33 ? 'мягкая' : val > 0.66 ? 'твёрдая' : 'средняя';
+      } else if (slider.id === "eyes") {
+        displayValue = Math.round(2 + val * 8); // 0→2, 1→10
+      } else if (slider.id === "bodyLength") {
+        // Логарифмическое преобразование для длины
+        const logMin = Math.log(0.3);
+        const logMax = Math.log(15);
+        const logVal = logMin + (logMax - logMin) * ((val - 0.3) / (15 - 0.3));
+        displayValue = `~${Math.exp(logVal).toFixed(1)} ${unit}`;
+      } else {
+        displayValue = `~${val.toFixed(1)} ${unit}`;
+      }
 
-    // Обновим позицию над ползунком
-    const percent = (val - slider.min) / (slider.max - slider.min);
-    output.textContent = displayValue;
-    output.style.left = `calc(${percent * 100}% - 20px)`;
-  });
-}
-
- function update() {
-  updateCurrentValues();
-  const userInput = {
-    bodyLength: getInputValue('bodyLength'),
-    bodyLengthUnknown: isUnknown('bodyLengthUnknown'),
-    consistency: getInputValue('consistency'),
-    consistencyUnknown: isUnknown('consistencyUnknown'), // исправлено!
-    eyes: getInputValue('eyes'),
-    eyesUnknown: isUnknown('eyesUnknown'),
-  };
-
-  const traitsToCheck = [];
-  if (!userInput.bodyLengthUnknown) traitsToCheck.push('bodyLength');
-  if (!userInput.consistencyUnknown) traitsToCheck.push('consistency');
-  if (!userInput.eyesUnknown) traitsToCheck.push('eyes');
-
-  if (traitsToCheck.length === 0) {
-    candidatesDiv.innerHTML = '<i>Нет данных для оценки</i>';
-    return;
+      output.textContent = displayValue;
+    });
   }
 
-  const scored = leeches.map(l => {
-    let scoreSum = 0;
-    traitsToCheck.forEach(trait => {
-      scoreSum += 1 - Math.abs(userInput[trait] - l[trait]);
+  function update() {
+    updateCurrentValues();
+    const userInput = {
+      bodyLength: getInputValue('bodyLength'),
+      bodyLengthUnknown: isUnknown('bodyLengthUnknown'),
+      consistency: getInputValue('consistency'),
+      consistencyUnknown: isUnknown('consistencyUnknown'),
+      eyes: getInputValue('eyes'),
+      eyesUnknown: isUnknown('eyesUnknown'),
+    };
+
+    const scored = leeches.map(l => {
+      let scoreSum = 0;
+      let traitsCount = 0;
+      
+      if (!userInput.bodyLengthUnknown) {
+        const bodyLengthLog = Math.log(userInput.bodyLength);
+        const leechBodyLengthLog = Math.log(l.bodyLength);
+        scoreSum += 1 - Math.min(1, Math.abs(bodyLengthLog - leechBodyLengthLog) / 2);
+        traitsCount++;
+      }
+      
+      if (!userInput.consistencyUnknown) {
+        scoreSum += 1 - Math.abs(userInput.consistency - l.consistency);
+        traitsCount++;
+      }
+      
+      if (!userInput.eyesUnknown) {
+        scoreSum += 1 - Math.abs(userInput.eyes - l.eyes);
+        traitsCount++;
+      }
+
+      return { 
+        name: l.name, 
+        score: traitsCount > 0 ? scoreSum / traitsCount : 0 
+      };
     });
-    return { name: l.name, score: scoreSum / traitsToCheck.length };
+
+    scored.sort((a, b) => b.score - a.score);
+
+    candidatesDiv.innerHTML = scored
+      .filter(s => s.score > 0.1)
+      .map(s => `<div class="candidate"><span class="highlight">${s.name}</span> — уверенность ${(s.score * 100).toFixed(1)}%</div>`)
+      .join('') || '<i>Нет подходящих кандидатов</i>';
+  }
+
+  // Инициализация
+  document.querySelectorAll('.slider-group-row').forEach(group => {
+    const slider = group.querySelector('input[type="range"]');
+    const unknownCheckbox = group.querySelector('input[type="checkbox"]');
+    
+    if (unknownCheckbox.checked) {
+      slider.disabled = true;
+      slider.classList.add('disabled');
+    }
+    
+    unknownCheckbox.addEventListener('change', () => {
+      slider.disabled = unknownCheckbox.checked;
+      slider.classList.toggle('disabled', unknownCheckbox.checked);
+      update();
+    });
   });
 
-  scored.sort((a, b) => b.score - a.score);
-
-  candidatesDiv.innerHTML = scored
-    .filter(s => s.score > 0.3)
-    .map(s => `<div class="candidate"><span class="highlight">${s.name}</span> — уверенность ${(s.score * 100).toFixed(1)}%</div>`)
-    .join('') || '<i>Нет подходящих кандидатов</i>';
-}
-    
   form.addEventListener('input', update);
   document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.addEventListener('change', update));
   window.addEventListener('load', update);
-
-  document.querySelectorAll('.slider-group-row').forEach(group => {
-  const slider = group.querySelector('input[type="range"]');
-  const unknownCheckbox = group.querySelector('input[type="checkbox"]');
-
-  // Установить disabled по умолчанию, если чекбокс включён
-  if (unknownCheckbox.checked) {
-    slider.disabled = true;
-    slider.classList.add('disabled');
-  }
-
-  // Добавить слушатель на изменение состояния чекбокса
-  unknownCheckbox.addEventListener('change', () => {
-    if (unknownCheckbox.checked) {
-  slider.setAttribute('disabled', true);
-  slider.classList.add('disabled');
-} else {
-  slider.removeAttribute('disabled');
-  slider.classList.remove('disabled');
-}
-  });
-});
 </script>
-
 </body>
 </html>
