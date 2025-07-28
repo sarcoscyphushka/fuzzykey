@@ -90,6 +90,25 @@
       color: #006600;
       font-weight: bold;
     }
+  .binary-group-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.binary-label {
+  min-width: 160px;
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-right: 20px;
+}
+.binary-options {
+  display: flex;
+  gap: 15px;
+}
+.candidate .exact-match {
+  color: #d9534f;
+  font-weight: bold;
+}
   </style>
 </head>
 <body>
@@ -137,6 +156,22 @@
         </label>
       </div>
     </div>
+
+<div class="binary-group-row">
+  <div class="binary-label">Наличие хитиноидной пластинки</div>
+  <div class="binary-options">
+    <label>
+      <input type="radio" name="chitin" value="1" checked> Да
+    </label>
+    <label>
+      <input type="radio" name="chitin" value="0"> Нет
+    </label>
+    <label>
+      <input type="radio" name="chitin" value="unknown" checked> Не знаю
+    </label>
+  </div>
+</div>
+    
   </form>
 
   <div class="result" id="result">
@@ -146,17 +181,17 @@
 
 <script>
   const leeches = [
-    { name: 'Helobdella stagnalis', bodyLength: 0.5, consistency: 0.5, eyes: 0 },
-    { name: 'Alboglossiphonia heteroclita', bodyLength: 0.5, consistency: 0.5, eyes: 0.5 },
-    { name: 'Theromyzon tessulatum', bodyLength: 1.5, consistency: 0, eyes: 0.75 },
-    { name: 'Hemiclepsis marginata', bodyLength: 1.5, consistency: 0.5, eyes: 0.25 },
-    { name: 'Glossiphonia complanata', bodyLength: 1.5, consistency: 1, eyes: 0.5 },
-    { name: 'Piscicola geometra', bodyLength: 1.5, consistency: 0.5, eyes: 0.25 },
-    { name: 'Erpobdella octoculata', bodyLength: 4, consistency: 0.5, eyes: 0.75 },
-    { name: 'Erpobdella nigricollis', bodyLength: 4, consistency: 0.5, eyes: 0.75 },
-    { name: 'Erpobdella lineata', bodyLength:4, consistency: 0.5, eyes: 0.75 },
-    { name: 'Haemopis sanguisuga', bodyLength: 12, consistency: 0.5, eyes: 1 },
-    { name: 'Hirudo medicinalis', bodyLength: 10, consistency: 0.5, eyes: 1 },
+    { name: 'Helobdella stagnalis', bodyLength: 0.5, consistency: 0.5, eyes: 0, chitin: 1 },
+    { name: 'Alboglossiphonia heteroclita', bodyLength: 0.5, consistency: 0.5, eyes: 0.5, chitin: 0 },
+    { name: 'Theromyzon tessulatum', bodyLength: 1.5, consistency: 0, eyes: 0.75, chitin: 0 },
+    { name: 'Hemiclepsis marginata', bodyLength: 1.5, consistency: 0.5, eyes: 0.25, chitin: 0 },
+    { name: 'Glossiphonia complanata', bodyLength: 1.5, consistency: 1, eyes: 0.5, chitin: 0 },
+    { name: 'Piscicola geometra', bodyLength: 1.5, consistency: 0.5, eyes: 0.25, chitin: 0 },
+    { name: 'Erpobdella octoculata', bodyLength: 4, consistency: 0.5, eyes: 0.75, chitin: 0 },
+    { name: 'Erpobdella nigricollis', bodyLength: 4, consistency: 0.5, eyes: 0.75, chitin: 0 },
+    { name: 'Erpobdella lineata', bodyLength:4, consistency: 0.5, eyes: 0.75, chitin: 0 },
+    { name: 'Haemopis sanguisuga', bodyLength: 12, consistency: 0.5, eyes: 1, chitin: 0 },
+    { name: 'Hirudo medicinalis', bodyLength: 10, consistency: 0.5, eyes: 1, chitin: 0 },
   ];
 
   const form = document.getElementById('keyForm');
@@ -200,6 +235,8 @@
       consistencyUnknown: isUnknown('consistencyUnknown'),
       eyes: getInputValue('eyes'),
       eyesUnknown: isUnknown('eyesUnknown'),
+      chitin: document.querySelector('input[name="chitin"]:checked').value,
+      chitinUnknown: document.querySelector('input[name="chitin"]:checked').value === "unknown"
     };
 
     const scored = leeches.map(l => {
@@ -227,11 +264,34 @@
       };
     });
 
-    scored.sort((a, b) => b.score - a.score);
+     if (!userInput.chitinUnknown) {
+      const userChitin = parseInt(userInput.chitin);
+      scoreSum += (userChitin === l.chitin) ? 1 : 0; // Полное совпадение даёт +1
+      traitsCount++;
+    }
 
+    return { 
+      name: l.name, 
+      score: traitsCount > 0 ? scoreSum / traitsCount : 0,
+      exactMatch: (l.chitin === 1 && userInput.chitin === "1") // Флаг для точного совпадения
+    };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+    if (a.exactMatch && !b.exactMatch) return -1;
+    if (!a.exactMatch && b.exactMatch) return 1;
+    return b.score - a.score;
+  });
+  
     candidatesDiv.innerHTML = scored
       .filter(s => s.score > 0.1)
-      .map(s => `<div class="candidate"><span class="highlight">${s.name}</span> — уверенность ${(s.score * 100).toFixed(1)}%</div>`)
+      .map(s => `
+      <div class="candidate">
+        <span class="highlight">${s.name}</span>
+        ${s.exactMatch ? '⭐ ' : ''}— уверенность ${(s.score * 100).toFixed(1)}%
+      </div>`
+    ).join('') || '<i>Нет подходящих кандидатов</i>';
+}
       .join('') || '<i>Нет подходящих кандидатов</i>';
   }
 
