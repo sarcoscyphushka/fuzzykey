@@ -205,17 +205,17 @@
 
 <script>
   const leeches = [
-    { name: 'Helobdella stagnalis', bodyLength: 0, consistency: 0.5, eyes: 0 },
-    { name: 'Alboglossiphonia heteroclita', bodyLength: 0, consistency: 0.5, eyes: 0.6 },
-    { name: 'Theromyzon tessulatum', bodyLength: 0.25, consistency: 0, eyes: 0.75 },
-    { name: 'Hemiclepsis marginata', bodyLength: 0.25, consistency: 0.5, eyes: 0.25 },
-    { name: 'Glossiphonia complanata', bodyLength: 0.25, consistency: 1, eyes: 0.6 },
-    { name: 'Piscicola geometra', bodyLength: 0.25, consistency: 0.5, eyes: 0.25 },
-    { name: 'Erpobdella octoculata', bodyLength: 0.5, consistency: 0.5, eyes: 0.75 },
-    { name: 'Erpobdella nigricollis', bodyLength: 0.5, consistency: 0.5, eyes: 0.75 },
-    { name: 'Erpobdella lineata', bodyLength: 0.5, consistency: 0.5, eyes: 0.75 },
-    { name: 'Haemopis sanguisuga', bodyLength: 1, consistency: 0.5, eyes: 1 },
-    { name: 'Hirudo medicinalis', bodyLength: 1, consistency: 0.5, eyes: 1 },
+  { name: 'Helobdella stagnalis', bodyLength: 0.5, consistency: 0.5, eyes: 0 },
+  { name: 'Alboglossiphonia heteroclita', bodyLength: 0.5, consistency: 0.5, eyes: 0.6 },
+  { name: 'Theromyzon tessulatum', bodyLength: 1.5, consistency: 0, eyes: 0.75 },
+  { name: 'Hemiclepsis marginata', bodyLength: 1.5, consistency: 0.5, eyes: 0.25 },
+  { name: 'Glossiphonia complanata', bodyLength: 1.5, consistency: 1, eyes: 0.6 },
+  { name: 'Piscicola geometra', bodyLength: 1.5, consistency: 0.5, eyes: 0.25 },
+  { name: 'Erpobdella octoculata', bodyLength: 4, consistency: 0.5, eyes: 0.75 },
+  { name: 'Erpobdella nigricollis', bodyLength: 4, consistency: 0.5, eyes: 0.75 },
+  { name: 'Erpobdella lineata', bodyLength:4, consistency: 0.5, eyes: 0.75 },
+  { name: 'Haemopis sanguisuga', bodyLength: 12, consistency: 0.5, eyes: 1 },
+  { name: 'Hirudo medicinalis', bodyLength: 10, consistency: 0.5, eyes: 1 },
   ];
 
   const form = document.getElementById('keyForm');
@@ -283,7 +283,7 @@ function updateCurrentValues() {
     scored.sort((a, b) => b.score - a.score);
 
     candidatesDiv.innerHTML = scored
-      .filter(s => s.score > 0.4)
+      .filter(s => s.score > 0.3)
       .map(s => `<div class="candidate"><span class="highlight">${s.name}</span> — уверенность ${(s.score * 100).toFixed(1)}%</div>`)
       .join('') || '<i>Нет подходящих кандидатов</i>';
   }
