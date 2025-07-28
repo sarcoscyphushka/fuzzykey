@@ -20,6 +20,7 @@
       display: flex;
       align-items: center;
       margin-bottom: 40px;
+      margin-top: 2em;
     }
     .slider-label {
       min-width: 160px;
@@ -104,6 +105,12 @@
       font-size: 0.75em;
       color: #444;
     }
+    .slider-marks span {
+    flex: 1;
+    text-align: center;
+    font-size: 0.8em;
+    margin-top: 6px;
+    }
     .current-value {
       margin-top: 6px;
       font-weight: bold;
@@ -136,56 +143,57 @@
   <form id="keyForm">
 
     <!-- Длина тела -->
-    <div class="slider-group-row">
-      <div class="slider-label">Длина тела</div>
-      <div class="slider-container">
-        <input type="range" min="0" max="1" step="0.01" value="0.5" id="bodyLength" class="fuzzy-slider"
-          data-min-label="3 мм" data-max-label="15 см" data-unit="см" data-scale-min="0.3" data-scale-max="15">
-        <output class="slider-value" for="bodyLength">~7.5 см</output>
-        <div class="slider-marks">
-          <span>3 мм</span>
-          <span>1 см</span>
-          <span>2.5 см</span>
-          <span>5 см</span>
-          <span>10 см</span>
-          <span>15 см</span>
-        </div>
-        <label class="unknown-check"><input type="checkbox" id="bodyLengthUnknown"> Не знаю</label>
-      </div>
+   <div class="slider-group-row">
+  <div class="slider-label">Длина тела</div>
+  <div class="slider-container">
+    <input type="range" min="0" max="1" step="0.01" value="0.5" id="bodyLength" class="fuzzy-slider"
+      data-min-label="3 мм" data-max-label="15 см" data-unit="см" data-scale-min="0" data-scale-max="15">
+    <output class="slider-value" for="bodyLength">~7.5 см</output>
+    <div class="slider-marks">
+      <span>3 мм</span>
+      <span>1 см</span>
+      <span>2.5 см</span>
+      <span>5 см</span>
+      <span>10 см</span>
+      <span>15 см</span>
     </div>
+    <label class="unknown-check"><input type="checkbox" id="bodyLengthUnknown"> Не знаю</label>
+  </div>
+</div>
 
-    <!-- Консистенция тела -->
-    <div class="slider-group-row">
-      <div class="slider-label">Консистенция</div>
-      <div class="slider-container">
-        <input type="range" id="consistency" min="0" max="1" step="0.01" value="0.5" />
-        <div class="slider-scale">
-          <div class="tick" style="left: 0%;"></div><div class="label" style="left: 0%;">мягкая</div>
-          <div class="tick" style="left: 50%;"></div><div class="label" style="left: 50%;">средняя</div>
-          <div class="tick" style="left: 100%;"></div><div class="label" style="left: 100%;">твёрдая</div>
-        </div>
-        <div class="current-value" id="consistencyValue">средняя</div>
-        <label class="checkbox-label"><input type="checkbox" id="consistencyUnknown" /> Не знаю</label>
-      </div>
+<!-- Консистенция тела -->
+<div class="slider-group-row">
+  <div class="slider-label">Консистенция</div>
+  <div class="slider-container">
+    <input type="range" min="0" max="1" step="0.01" value="0.5" id="consistency" class="fuzzy-slider"
+      data-unit="" data-scale-min="0" data-scale-max="1">
+    <output class="slider-value" for="consistency">средняя</output>
+    <div class="slider-marks">
+      <span>мягкая</span>
+      <span>средняя</span>
+      <span>твёрдая</span>
     </div>
+    <label class="unknown-check"><input type="checkbox" id="consistencyUnknown"> Не знаю</label>
+  </div>
+</div>
 
     <!-- Количество глаз -->
-    <div class="slider-group-row">
-      <div class="slider-label">Число глаз</div>
-      <div class="slider-container">
-        <input type="range" id="eyes" min="0" max="1" step="0.01" value="0.5" />
-        <div class="slider-scale">
-          <div class="tick" style="left: 0%;"></div><div class="label" style="left: 0%;">2</div>
-          <div class="tick" style="left: 25%;"></div><div class="label" style="left: 25%;">4</div>
-          <div class="tick" style="left: 50%;"></div><div class="label" style="left: 50%;">6</div>
-          <div class="tick" style="left: 75%;"></div><div class="label" style="left: 75%;">8</div>
-          <div class="tick" style="left: 100%;"></div><div class="label" style="left: 100%;">10</div>
-        </div>
-        <div class="current-value" id="eyesValue">6</div>
-        <label class="checkbox-label"><input type="checkbox" id="eyesUnknown" /> Не знаю</label>
-      </div>
+<div class="slider-group-row">
+  <div class="slider-label">Число глаз</div>
+  <div class="slider-container">
+    <input type="range" min="0" max="1" step="0.01" value="0.5" id="eyes" class="fuzzy-slider"
+      data-unit="" data-scale-min="2" data-scale-max="10">
+    <output class="slider-value" for="eyes">6</output>
+    <div class="slider-marks">
+      <span>2</span>
+      <span>4</span>
+      <span>6</span>
+      <span>8</span>
+      <span>10</span>
     </div>
-
+    <label class="unknown-check"><input type="checkbox" id="eyesUnknown"> Не знаю</label>
+  </div>
+</div>
   </form>
 
   <div class="result" id="result">
@@ -219,24 +227,28 @@
     return document.getElementById(id).checked;
   }
 
-  function updateCurrentValues() {
-    const consVal = getInputValue('consistency');
-    const eyesVal = getInputValue('eyes');
-    document.getElementById('consistencyValue').textContent =
-      consVal < 0.33 ? 'мягкая' : consVal > 0.66 ? 'твёрдая' : 'средняя';
-    document.getElementById('eyesValue').textContent = Math.round(2 + eyesVal * 8);
+ function updateCurrentValues() {
+  document.querySelectorAll('.fuzzy-slider').forEach(slider => {
+    const output = slider.parentElement.querySelector('.slider-value');
+    const scaleMin = parseFloat(slider.dataset.scaleMin || 0);
+    const scaleMax = parseFloat(slider.dataset.scaleMax || 1);
+    const unit = slider.dataset.unit || "";
+    const val = parseFloat(slider.value);
+    const scaled = scaleMin + val * (scaleMax - scaleMin);
 
-    document.querySelectorAll('.fuzzy-slider').forEach(slider => {
-      const output = slider.parentElement.querySelector('.slider-value');
-      const scaleMin = parseFloat(slider.dataset.scaleMin);
-      const scaleMax = parseFloat(slider.dataset.scaleMax);
-      const unit = slider.dataset.unit;
-      const val = parseFloat(slider.value);
-      const scaled = scaleMin + val * (scaleMax - scaleMin);
-      output.textContent = `~${scaled.toFixed(1)} ${unit}`;
-      output.style.left = `calc(${val * 100}% - 20px)`;
-    });
-  }
+    let displayValue;
+    if (slider.id === "consistency") {
+      displayValue = val < 0.33 ? 'мягкая' : val > 0.66 ? 'твёрдая' : 'средняя';
+    } else if (slider.id === "eyes") {
+      displayValue = Math.round(scaled).toString();
+    } else {
+      displayValue = `~${scaled.toFixed(1)} ${unit}`;
+    }
+
+    output.textContent = displayValue;
+    output.style.left = `calc(${val * 100}% - 20px)`;
+  });
+}
 
   function update() {
     updateCurrentValues();
