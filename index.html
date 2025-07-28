@@ -57,6 +57,10 @@
       background: #ddd;
       border-radius: 6px;
     }
+    input[type=range].disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }  
     .slider-value {
       position: absolute;
       top: -28px;
@@ -159,7 +163,10 @@
   <span>10</span>
   <span>15</span>
 </div>
-    <label class="unknown-check"><input type="checkbox" id="bodyLengthUnknown"> Не знаю</label>
+    <label>
+  <input type="checkbox" id="bodyLengthUnknown" checked>
+  Не знаю
+</label>
   </div>
 </div>
 
@@ -175,7 +182,10 @@
       <span>средняя</span>
       <span>твёрдая</span>
     </div>
-    <label class="unknown-check"><input type="checkbox" id="consistencyUnknown"> Не знаю</label>
+    <label>
+  <input type="checkbox" id="consistency" checked>
+  Не знаю
+</label>
   </div>
 </div>
 
@@ -193,7 +203,10 @@
       <span>8</span>
       <span>10</span>
     </div>
-    <label class="unknown-check"><input type="checkbox" id="eyesUnknown"> Не знаю</label>
+    <label>
+  <input type="checkbox" id="eyesUnknown" checked>
+  Не знаю
+</label>
   </div>
 </div>
   </form>
@@ -291,6 +304,27 @@ function updateCurrentValues() {
   form.addEventListener('input', update);
   document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.addEventListener('change', update));
   window.addEventListener('load', update);
+
+  document.querySelectorAll('.slider-group').forEach(group => {
+  const slider = group.querySelector('input[type="range"]');
+  const unknownCheckbox = group.querySelector('input[type="checkbox"]');
+
+  // Установить disabled по умолчанию, если чекбокс включён
+  if (unknownCheckbox.checked) {
+    slider.disabled = true;
+    slider.classList.add('disabled');
+  }
+
+  // Добавить слушатель на изменение состояния чекбокса
+  unknownCheckbox.addEventListener('change', () => {
+    slider.disabled = unknownCheckbox.checked;
+    if (slider.disabled) {
+      slider.classList.add('disabled');
+    } else {
+      slider.classList.remove('disabled');
+    }
+  });
+});
 </script>
 
 </body>
