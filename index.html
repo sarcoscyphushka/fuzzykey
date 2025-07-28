@@ -4,279 +4,186 @@
   <meta charset="UTF-8" />
   <title>FUZZYKEY</title>
   <link rel="icon" type="image/png" href="favicon.png">
-
-<meta charset="UTF-8" />
-<title>Fuzzykey-определитель пиявок (Hirudinea) средней полосы Европейской части России</title>
-<style>
-  body {
-    font-family: Candara;
-    background: #f0f0f5;
-    padding: 20px;
-    max-width: 700px;
-    margin: auto;
-    color: #333;
-  }
-  h1 {
-    text-align: center;
-  }
-  .trait {
-    margin-bottom: 60px;
-    position: relative;
-  }
-  label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 8px;
-  }
-  .slider-container {
-  position: relative;
-  margin-bottom: 2em;
-}
-
-.slider-group-row {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 1.5em;
-}
-
-.slider-label {
-  min-width: 140px;
-  font-size: 1.2em;
-  font-weight: bold;
-  margin-right: 1em;
-  padding-top: 4px;
-}
-
-.slider-container {
-  flex: 1;
-  position: relative;
-}
-
-.slider-value {
-  position: absolute;
-  top: -1.8em;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #eee;
-  padding: 2px 6px;
-  border-radius: 6px;
-  font-size: 0.9em;
-  pointer-events: none;
-}
-
-.slider-marks {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.8em;
-  margin-top: 0.4em;
-  color: #666;
-}
-
-.unknown-check {
-  display: block;
-  margin-top: 0.5em;
-  font-size: 0.9em;
-}
-
-  input[type="range"] {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 12px;
-    border-radius: 6px;
-    background: #ddd;
-    outline: none;
-    margin: 0;
-    padding: 0;
-    position: absolute;
-    top: 20px;
-    left: 0;
-    z-index: 1;
-    cursor: pointer;
-  }
-  /* Ползунок (ручка) */
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: #4CAF50;
-    cursor: pointer;
-    border: 2px solid #388E3C;
-    position: relative;
-    z-index: 2;
-    margin-top: -5px;
-    transition: background 0.3s ease;
-  }
-  input[type="range"]:focus::-webkit-slider-thumb {
-    background: #388E3C;
-  }
-  input[type="range"]::-moz-range-thumb {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: #4CAF50;
-    border: 2px solid #388E3C;
-    cursor: pointer;
-    position: relative;
-    z-index: 2;
-    transition: background 0.3s ease;
-  }
-  input[type="range"]:focus::-moz-range-thumb {
-    background: #388E3C;
-  }
-  /* Полоса прогресса */
-  input[type="range"]::-webkit-slider-runnable-track {
-    height: 12px;
-    border-radius: 6px;
-    background: #ddd;
-  }
-  input[type="range"]::-moz-range-track {
-    height: 12px;
-    border-radius: 6px;
-    background: #ddd;
-  }
-
-  /* Контейнер делений и меток */
-  .slider-scale {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 20px;
-    pointer-events: none;
-    user-select: none;
-  }
-  /* Деления */
-  .slider-scale .tick {
-    position: absolute;
-    top: 12px;
-    width: 1px;
-    height: 10px;
-    background: #888;
-    transform: translateX(-50%);
-  }
-  /* Метки */
-  .slider-scale .label {
-    position: absolute;
-    top: 0;
-    white-space: nowrap;
-    transform: translateX(-50%);
-    color: #444;
-    font-weight: normal;
-    font-size: 0.75em;
-  }
-
-  .checkbox-label {
-    font-weight: normal;
-    margin-top: 8px;
-    display: inline-block;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .hint {
-    font-size: 0.9em;
-    color: #666;
-    margin-top: 4px;
-  }
-
-  .current-value {
-    position: absolute;
-    top: 0;
-    right: 0;
-    font-weight: bold;
-    color: #222;
-    user-select: none;
-    font-size: 0.9em;
-  }
-
-  /* Результаты */
-  .result {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-    margin-top: 30px;
-  }
-  .candidate {
-    margin-bottom: 8px;
-  }
-  .highlight {
-    color: #006600;
-    font-weight: bold;
-  }
-</style>
+  <style>
+    body {
+      font-family: Candara, sans-serif;
+      background: #f0f0f5;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+    }
+    .slider-group-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    .slider-label {
+      min-width: 160px;
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-right: 20px;
+    }
+    .slider-container {
+      flex: 1;
+      position: relative;
+    }
+    input[type="range"] {
+      width: 100%;
+      height: 12px;
+      border-radius: 6px;
+      background: #ddd;
+      appearance: none;
+      margin: 0;
+      padding: 0;
+      z-index: 1;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #4CAF50;
+      border: 2px solid #388E3C;
+      margin-top: -5px;
+    }
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 12px;
+      background: #ddd;
+      border-radius: 6px;
+    }
+    .slider-value {
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #eee;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.9em;
+    }
+    .slider-marks {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8em;
+      margin-top: 8px;
+      color: #666;
+    }
+    .unknown-check {
+      display: block;
+      margin-top: 6px;
+      font-size: 0.9em;
+    }
+    .trait {
+      margin-bottom: 40px;
+    }
+    .slider-scale {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 20px;
+      pointer-events: none;
+    }
+    .slider-scale .tick {
+      position: absolute;
+      top: 12px;
+      width: 1px;
+      height: 10px;
+      background: #888;
+      transform: translateX(-50%);
+    }
+    .slider-scale .label {
+      position: absolute;
+      top: 0;
+      transform: translateX(-50%);
+      font-size: 0.75em;
+      color: #444;
+    }
+    .current-value {
+      margin-top: 6px;
+      font-weight: bold;
+      font-size: 0.95em;
+    }
+    .checkbox-label {
+      margin-top: 6px;
+      font-size: 0.9em;
+      display: block;
+    }
+    .result {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      margin-top: 30px;
+    }
+    .candidate {
+      margin-bottom: 8px;
+    }
+    .highlight {
+      color: #006600;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <h1>Fuzzykey-определитель пиявок (Hirudinea) средней полосы Европейской части России</h1>
 
   <form id="keyForm">
 
-<div class="slider-group-row">
-  <div class="slider-label">Длина тела</div>
-  <div class="slider-container">
-    <input type="range" min="0" max="1" step="0.01" value="0.5" id="bodyLength" class="fuzzy-slider"
-      data-min-label="3 мм" data-max-label="15 см" data-unit="см" data-scale-min="0.3" data-scale-max="15">
-    <output class="slider-value" for="bodyLength">~7.5 см</output>
-    <div class="slider-marks">
-      <span>3 мм</span>
-      <span>1 см</span>
-      <span>2.5 см</span>
-      <span>5 см</span>
-      <span>10 см</span>
-      <span>15 см</span>
+    <!-- Длина тела -->
+    <div class="slider-group-row">
+      <div class="slider-label">Длина тела</div>
+      <div class="slider-container">
+        <input type="range" min="0" max="1" step="0.01" value="0.5" id="bodyLength" class="fuzzy-slider"
+          data-min-label="3 мм" data-max-label="15 см" data-unit="см" data-scale-min="0.3" data-scale-max="15">
+        <output class="slider-value" for="bodyLength">~7.5 см</output>
+        <div class="slider-marks">
+          <span>3 мм</span>
+          <span>1 см</span>
+          <span>2.5 см</span>
+          <span>5 см</span>
+          <span>10 см</span>
+          <span>15 см</span>
+        </div>
+        <label class="unknown-check"><input type="checkbox" id="bodyLengthUnknown"> Не знаю</label>
+      </div>
     </div>
-    <label class="unknown-check"><input type="checkbox" id="bodyLengthUnknown"> Не знаю</label>
-  </div>
-</div>
 
     <!-- Консистенция тела -->
-    <div class="trait">
-      <label for="consistency">Консистенция тела (0 — мягкая, 1 — твёрдая)</label>
+    <div class="slider-group-row">
+      <div class="slider-label">Консистенция</div>
       <div class="slider-container">
         <input type="range" id="consistency" min="0" max="1" step="0.01" value="0.5" />
-        <div class="current-value" id="consistencyValue">средняя</div>
-        <div class="slider-scale" aria-hidden="true">
-          <div class="tick" style="left: 0%;"></div>
-          <div class="label" style="left: 0%;">мягкая</div>
-
-          <div class="tick" style="left: 50%;"></div>
-          <div class="label" style="left: 50%;">средняя</div>
-
-          <div class="tick" style="left: 100%;"></div>
-          <div class="label" style="left: 100%;">твёрдая</div>
+        <div class="slider-scale">
+          <div class="tick" style="left: 0%;"></div><div class="label" style="left: 0%;">мягкая</div>
+          <div class="tick" style="left: 50%;"></div><div class="label" style="left: 50%;">средняя</div>
+          <div class="tick" style="left: 100%;"></div><div class="label" style="left: 100%;">твёрдая</div>
         </div>
+        <div class="current-value" id="consistencyValue">средняя</div>
+        <label class="checkbox-label"><input type="checkbox" id="consistencyUnknown" /> Не знаю</label>
       </div>
-      <label class="checkbox-label"><input type="checkbox" id="consistencyUnknown" /> Не знаю</label>
-      <div class="hint">0 = мягкая, 1 = твёрдая</div>
     </div>
 
     <!-- Количество глаз -->
-    <div class="trait">
-      <label for="eyes">Количество глаз (2–10)</label>
+    <div class="slider-group-row">
+      <div class="slider-label">Число глаз</div>
       <div class="slider-container">
         <input type="range" id="eyes" min="0" max="1" step="0.01" value="0.5" />
-        <div class="current-value" id="eyesValue">6</div>
-        <div class="slider-scale" aria-hidden="true">
-          <div class="tick" style="left: 0%;"></div>
-          <div class="label" style="left: 0%;">2</div>
-
-          <div class="tick" style="left: 22%;"></div>
-          <div class="label" style="left: 22%;">4</div>
-
-          <div class="tick" style="left: 44%;"></div>
-          <div class="label" style="left: 44%;">6</div>
-
-          <div class="tick" style="left: 67%;"></div>
-          <div class="label" style="left: 67%;">8</div>
-
-          <div class="tick" style="left: 100%;"></div>
-          <div class="label" style="left: 100%;">10</div>
+        <div class="slider-scale">
+          <div class="tick" style="left: 0%;"></div><div class="label" style="left: 0%;">2</div>
+          <div class="tick" style="left: 25%;"></div><div class="label" style="left: 25%;">4</div>
+          <div class="tick" style="left: 50%;"></div><div class="label" style="left: 50%;">6</div>
+          <div class="tick" style="left: 75%;"></div><div class="label" style="left: 75%;">8</div>
+          <div class="tick" style="left: 100%;"></div><div class="label" style="left: 100%;">10</div>
         </div>
+        <div class="current-value" id="eyesValue">6</div>
+        <label class="checkbox-label"><input type="checkbox" id="eyesUnknown" /> Не знаю</label>
       </div>
-      <label class="checkbox-label"><input type="checkbox" id="eyesUnknown" /> Не знаю</label>
-      <div class="hint">0 = 2 глаза, 1 = 10 глаз</div>
     </div>
 
   </form>
@@ -313,30 +220,26 @@
   }
 
   function updateCurrentValues() {
-    let consVal = getInputValue('consistency');
-    let consText = consVal < 0.33 ? 'мягкая' : consVal > 0.66 ? 'твёрдая' : 'средняя';
-    document.getElementById('consistencyValue').textContent = consText;
-
-    let eyesVal = getInputValue('eyes');
-    let eyesNum = Math.round(2 + eyesVal * 8);
-    document.getElementById('eyesValue').textContent = eyesNum;
+    const consVal = getInputValue('consistency');
+    const eyesVal = getInputValue('eyes');
+    document.getElementById('consistencyValue').textContent =
+      consVal < 0.33 ? 'мягкая' : consVal > 0.66 ? 'твёрдая' : 'средняя';
+    document.getElementById('eyesValue').textContent = Math.round(2 + eyesVal * 8);
 
     document.querySelectorAll('.fuzzy-slider').forEach(slider => {
       const output = slider.parentElement.querySelector('.slider-value');
       const scaleMin = parseFloat(slider.dataset.scaleMin);
       const scaleMax = parseFloat(slider.dataset.scaleMax);
       const unit = slider.dataset.unit;
-
       const val = parseFloat(slider.value);
       const scaled = scaleMin + val * (scaleMax - scaleMin);
       output.textContent = `~${scaled.toFixed(1)} ${unit}`;
-      output.style.left = `calc(${val * 100}% )`;
+      output.style.left = `calc(${val * 100}% - 20px)`;
     });
   }
 
   function update() {
     updateCurrentValues();
-
     const userInput = {
       bodyLength: getInputValue('bodyLength'),
       bodyLengthUnknown: isUnknown('bodyLengthUnknown'),
@@ -346,7 +249,7 @@
       eyesUnknown: isUnknown('eyesUnknown'),
     };
 
-    let traitsToCheck = [];
+    const traitsToCheck = [];
     if (!userInput.bodyLengthUnknown) traitsToCheck.push('bodyLength');
     if (!userInput.consistencyUnknown) traitsToCheck.push('consistency');
     if (!userInput.eyesUnknown) traitsToCheck.push('eyes');
@@ -376,5 +279,6 @@
   document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.addEventListener('change', update));
   window.addEventListener('load', update);
 </script>
+
 </body>
 </html>
