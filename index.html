@@ -57,10 +57,10 @@
       background: #ddd;
       border-radius: 6px;
     }
-    input[type=range].disabled {
-      opacity: 0.4;
-      pointer-events: none;
-    }  
+    input[type=range].disabled::-webkit-slider-thumb {
+  background: #aaa;
+  border: 2px solid #888;
+}
     .slider-value {
       position: absolute;
       top: -28px;
@@ -305,7 +305,7 @@ function updateCurrentValues() {
   document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.addEventListener('change', update));
   window.addEventListener('load', update);
 
-  document.querySelectorAll('.slider-group').forEach(group => {
+  document.querySelectorAll('.slider-group-row').forEach(group => {
   const slider = group.querySelector('input[type="range"]');
   const unknownCheckbox = group.querySelector('input[type="checkbox"]');
 
@@ -317,12 +317,13 @@ function updateCurrentValues() {
 
   // Добавить слушатель на изменение состояния чекбокса
   unknownCheckbox.addEventListener('change', () => {
-    slider.disabled = unknownCheckbox.checked;
-    if (slider.disabled) {
-      slider.classList.add('disabled');
-    } else {
-      slider.classList.remove('disabled');
-    }
+    if (unknownCheckbox.checked) {
+  slider.setAttribute('disabled', true);
+  slider.classList.add('disabled');
+} else {
+  slider.removeAttribute('disabled');
+  slider.classList.remove('disabled');
+}
   });
 });
 </script>
