@@ -33,15 +33,34 @@
   margin-bottom: 2em;
 }
 
+.slider-group-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1.5em;
+}
+
+.slider-label {
+  min-width: 140px;
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-right: 1em;
+  padding-top: 4px;
+}
+
+.slider-container {
+  flex: 1;
+  position: relative;
+}
+
 .slider-value {
   position: absolute;
   top: -1.8em;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 0.85em;
-  color: #222;
-  font-weight: bold;
-  white-space: nowrap;
+  background-color: #eee;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 0.9em;
   pointer-events: none;
 }
 
@@ -49,8 +68,16 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.8em;
-  margin-top: 4px;
+  margin-top: 0.4em;
+  color: #666;
 }
+
+.unknown-check {
+  display: block;
+  margin-top: 0.5em;
+  font-size: 0.9em;
+}
+
   input[type="range"] {
     -webkit-appearance: none;
     width: 100%;
@@ -186,10 +213,11 @@
 
   <form id="keyForm">
 
- <div class="slider-group">
-  <label for="bodyLength">Длина тела</label>
+<div class="slider-group-row">
+  <div class="slider-label">Длина тела</div>
   <div class="slider-container">
-    <input type="range" min="0" max="1" step="0.01" value="0.5" id="bodyLength" class="fuzzy-slider" data-min-label="3 мм" data-max-label="15 см" data-unit="см" data-scale-min="0.3" data-scale-max="15">
+    <input type="range" min="0" max="1" step="0.01" value="0.5" id="bodyLength" class="fuzzy-slider"
+      data-min-label="3 мм" data-max-label="15 см" data-unit="см" data-scale-min="0.3" data-scale-max="15">
     <output class="slider-value" for="bodyLength">~7.5 см</output>
     <div class="slider-marks">
       <span>3 мм</span>
@@ -199,7 +227,7 @@
       <span>10 см</span>
       <span>15 см</span>
     </div>
-    <label><input type="checkbox" id="bodyLengthUnknown"> Не знаю</label>
+    <label class="unknown-check"><input type="checkbox" id="bodyLengthUnknown"> Не знаю</label>
   </div>
 </div>
 
