@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<title>Нечёткий ключ по пиявкам с встроенными делениями</title>
+<style>
+  body {
+    font-family: sans-serif;
+    background: #f0f0f5;
+    padding: 20px;
+    max-width: 700px;
+    margin: auto;
+    color: #333;
+  }
+  h1 {
+    text-align: center;
+  }
+  .trait {
+    margin-bottom: 60px;
+    position: relative;
+  }
+  label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .slider-container {
+    position: relative;
+    width: 100%;
+    height: 50px; /* чтобы помещались метки */
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 12px;
+    border-radius: 6px;
+    background: #ddd;
+    outline: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 20px;
+    left: 0;
+    z-index: 1;
+    cursor: pointer;
+  }
+  /* Ползунок (ручка) */
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+    border: 2px solid #388E3C;
+    position: relative;
+    z-index: 2;
+    margin-top: -5px;
+    transition: background 0.3s ease;
+  }
+  input[type="range"]:focus::-webkit-slider-thumb {
+    background: #388E3C;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #4CAF50;
+    border: 2px solid #388E3C;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    transition: background 0.3s ease;
+  }
+  input[type="range"]:focus::-moz-range-thumb {
+    background: #388E3C;
+  }
+  /* Полоса прогресса */
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 12px;
+    border-radius: 6px;
+    background: #ddd;
+  }
+  input[type="range"]::-moz-range-track {
+    height: 12px;
+    border-radius: 6px;
+    background: #ddd;
+  }
+
+  /* Контейнер делений и меток */
+  .slider-scale {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    pointer-events: none;
+    user-select: none;
+  }
+  /* Деления */
+  .slider-scale .tick {
+    position: absolute;
+    top: 12px;
+    width: 1px;
+    height: 10px;
+    background: #888;
+    transform: translateX(-50%);
+  }
+  /* Метки */
+  .slider-scale .label {
+    position: absolute;
+    top: 0;
+    white-space: nowrap;
+    transform: translateX(-50%);
+    color: #444;
+    font-weight: normal;
+    font-size: 0.75em;
+  }
+
+  .checkbox-label {
+    font-weight: normal;
+    margin-top: 8px;
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .hint {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 4px;
+  }
+
+  .current-value {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-weight: bold;
+    color: #222;
+    user-select: none;
+    font-size: 0.9em;
+  }
+
+  /* Результаты */
+  .result {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    margin-top: 30px;
+  }
+  .candidate {
+    margin-bottom: 8px;
+  }
+  .highlight {
+    color: #006600;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+  <h1>Нечёткий ключ по пиявкам с встроенными делениями</h1>
+
+  <form id="keyForm">
+
+    <!-- Длина тела -->
+    <div class="trait">
+      <label for="length">Длина тела (3 мм — 15 см)</label>
+      <div class="slider-container">
+        <input type="range" id="length" min="0" max="1" step="0.01" value="0.5" />
+        <div class="current-value" id="lengthValue">7.5 см</div>
+        <div class="slider-scale" aria-hidden="true">
+          <div class="tick" style="left: 0%;"></div>
+          <div class="label" style="left: 0%;">3 мм</div>
+
+          <div class="tick" style="left: 7%;"></div>
+          <div class="label" style="left: 7%;">1 см</div>
+
+          <div class="tick" style="left: 17%;"></div>
+          <div class="label" style="left: 17%;">2.5 см</div>
+
+          <div class="tick" style="left: 50%;"></div>
+          <div class="label" style="left: 50%;">5 см</div>
+
+          <div class="tick" style="left: 90%;"></div>
+          <div class="label" style="left: 90%;">10–15 см</div>
+        </div>
+      </div>
+      <label class="checkbox-label"><input type="checkbox" id="lengthUnknown" /> Не знаю</label>
+      <div class="hint">0 = маленький (3 мм), 1 = большой (15 см)</div>
+    </div>
+
+    <!-- Консистенция тела -->
+    <div class="trait">
+      <label for="consistency">Консистенция тела (0 — мягкая, 1 — твёрдая)</label>
+      <div class="slider-container">
+        <input type="range" id="consistency" min="0" max="1" step="0.01" value="0.5" />
+        <div class="current-value" id="consistencyValue">средняя</div>
+        <div class="slider-scale" aria-hidden="true">
+          <div class="tick" style="left: 0%;"></div>
+          <div class="label" style="left: 0%;">мягкая</div>
+
+          <div class="tick" style="left: 50%;"></div>
+          <div class="label" style="left: 50%;">средняя</div>
+
+          <div class="tick" style="left: 100%;"></div>
+          <div class="label" style="left: 100%;">твёрдая</div>
+        </div>
+      </div>
+      <label class="checkbox-label"><input type="checkbox" id="consistencyUnknown" /> Не знаю</label>
+      <div class="hint">0 = мягкая, 1 = твёрдая</div>
+    </div>
+
+    <!-- Количество глаз -->
+    <div class="trait">
+      <label for="eyes">Количество глаз (2–10)</label>
+      <div class="slider-container">
+        <input type="range" id="eyes" min="0" max="1" step="0.01" value="0.5" />
+        <div class="current-value" id="eyesValue">6</div>
+        <div class="slider-scale" aria-hidden="true">
+          <div class="tick" style="left: 0%;"></div>
+          <div class="label" style="left: 0%;">2</div>
+
+          <div class="tick" style="left: 22%;"></div>
+          <div class="label" style="left: 22%;">4</div>
+
+          <div class="tick" style="left: 44%;"></div>
+          <div class="label" style="left: 44%;">6</div>
+
+          <div class="tick" style="left: 67%;"></div>
+          <div class="label" style="left: 67%;">8</div>
+
+          <div class="tick" style="left: 100%;"></div>
+          <div class="label" style="left: 100%;">10</div>
+        </div>
+      </div>
+      <label class="checkbox-label"><input type="checkbox" id="eyesUnknown" /> Не знаю</label>
+      <div class="hint">0 = 2 глаза, 1 = 10 глаз</div>
+    </div>
+
+  </form>
+
+  <div class="result" id="result">
+    <h2>Вероятные виды:</h2>
+    <div id="candidates"></div>
+  </div>
+
+<script>
+  const leeches = [
+    { name: 'Helobdella stagnalis', length: 0, consistency: 0.5, eyes: 0 },
+    { name: 'Alboglossiphonia heteroclita', length: 0, consistency: 0.5, eyes: 0.6 },
+    { name: 'Theromyzon tessulatum', length: 0.25, consistency: 0, eyes: 0.75 },
+    { name: 'Hemiclepsis marginata', length: 0.25, consistency: 0.5, eyes: 0.25 },
+    { name: 'Glossiphonia complanata', length: 0.25, consistency: 1, eyes: 0.6 },
+    { name: 'Piscicola geometra', length: 0.25, consistency: 0.5, eyes: 0.25 },
+    { name: 'Erpobdella octoculata', length: 0.5, consistency: 0.5, eyes: 0.75 },
+    { name: 'Erpobdella nigricollis', length: 0.5, consistency: 0.5, eyes: 0.75 },
+    { name: 'Erpobdella lineata', length: 0.5, consistency: 0.5, eyes: 0.75 },
+    { name: 'Haemopis sanguisuga', length: 1, consistency: 0.5, eyes: 1 },
+    { name: 'Hirudo medicinalis', length: 1, consistency: 0.5, eyes: 1 },
+  ];
+
+  const form = document.getElementById('keyForm');
+  const candidatesDiv = document.getElementById('candidates');
+
+  function getInputValue(id) {
+    return parseFloat(document.getElementById(id).value);
+  }
+  function isUnknown(id) {
+    return document.getElementById(id).checked;
+  }
+
+  // Функция для отображения текущего значения рядом с ползунком
+  function updateCurrentValues() {
+    // Для длины тела — переводим значение [0..1] в см
+    let lengthVal = getInputValue('length');
+    let lengthCm = (lengthVal * 14.7 + 0.3).toFixed(1); // 3 мм=0.3см, 15см=15
+    document.getElementById('lengthValue').textContent = `${lengthCm} см`;
+
+    // Для консистенции — 0 мягкая, 1 твёрдая, 0.5 средняя
+    let consVal = getInputValue('consistency');
+    let consText = consVal < 0.33 ? 'мягкая' : consVal > 0.66 ? 'твёрдая' : 'средняя';
+    document.getElementById('consistencyValue').textContent = consText;
+
+    // Для глаз — 2..10 линейно
+    let eyesVal = getInputValue('eyes');
+    let eyesNum = Math.round(2 + eyesVal * 8);
+    document.getElementById('eyesValue').textContent = eyesNum;
+  }
+
+  function update() {
+    updateCurrentValues();
+
+    const userInput = {
+      length: getInputValue('length'),
+      lengthUnknown: isUnknown('lengthUnknown'),
+      consistency: getInputValue('consistency'),
+      consistencyUnknown: isUnknown('consistencyUnknown'),
+      eyes: getInputValue('eyes'),
+      eyesUnknown: isUnknown('eyesUnknown'),
+    };
+
+    let traitsToCheck = [];
+    if (!userInput.lengthUnknown) traitsToCheck.push('length');
+    if (!userInput.consistencyUnknown) traitsToCheck.push('consistency');
+    if (!userInput.eyesUnknown) traitsToCheck.push('eyes');
+
+    if (traitsToCheck.length === 0) {
+      candidatesDiv.innerHTML = '<i>Нет данных для оценки</i>';
+      return;
+    }
+
+    const scored = leeches.map(l => {
+      let scoreSum = 0;
+      traitsToCheck.forEach(trait => {
+        scoreSum += 1 - Math.abs(userInput[trait] - l[trait]);
+      });
+      return { name: l.name, score: scoreSum / traitsToCheck.length };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+
+    candidatesDiv.innerHTML = scored
+      .filter(s => s.score > 0.4)
+      .map(s => `<div class="candidate"><span class="highlight">${s.name}</span> — уверенность ${(s.score * 100).toFixed(1)}%</div>`)
+      .join('') || '<i>Нет подходящих кандидатов</i>';
+  }
+
+  form.addEventListener('input', update);
+  window.addEventListener('load', update);
+</script>
+</body>
+</html>
