@@ -146,17 +146,19 @@
    <div class="slider-group-row">
   <div class="slider-label">Длина тела</div>
   <div class="slider-container">
-    <input type="range" min="0" max="1" step="0.01" value="0.5" id="bodyLength" class="fuzzy-slider"
-      data-min-label="3 мм" data-max-label="15 см" data-unit="см" data-scale-min="0" data-scale-max="15">
+   <input type="range"
+       min="0.3" max="15" step="0.01" value="5"
+       id="bodyLength" class="fuzzy-slider"
+       data-unit="см">
     <output class="slider-value" for="bodyLength">~7.5 см</output>
     <div class="slider-marks">
-      <span>3 мм</span>
-      <span>1 см</span>
-      <span>2.5 см</span>
-      <span>5 см</span>
-      <span>10 см</span>
-      <span>15 см</span>
-    </div>
+  <span>0.3</span>
+  <span>1</span>
+  <span>2.5</span>
+  <span>5</span>
+  <span>10</span>
+  <span>15</span>
+</div>
     <label class="unknown-check"><input type="checkbox" id="bodyLengthUnknown"> Не знаю</label>
   </div>
 </div>
@@ -227,26 +229,25 @@
     return document.getElementById(id).checked;
   }
 
- function updateCurrentValues() {
+function updateCurrentValues() {
   document.querySelectorAll('.fuzzy-slider').forEach(slider => {
     const output = slider.parentElement.querySelector('.slider-value');
-    const scaleMin = parseFloat(slider.dataset.scaleMin || 0);
-    const scaleMax = parseFloat(slider.dataset.scaleMax || 1);
     const unit = slider.dataset.unit || "";
     const val = parseFloat(slider.value);
-    const scaled = scaleMin + val * (scaleMax - scaleMin);
 
     let displayValue;
     if (slider.id === "consistency") {
       displayValue = val < 0.33 ? 'мягкая' : val > 0.66 ? 'твёрдая' : 'средняя';
     } else if (slider.id === "eyes") {
-      displayValue = Math.round(scaled).toString();
+      displayValue = Math.round(val).toString();
     } else {
-      displayValue = `~${scaled.toFixed(1)} ${unit}`;
+      displayValue = `~${val.toFixed(1)} ${unit}`;
     }
 
+    // Обновим позицию над ползунком
+    const percent = (val - slider.min) / (slider.max - slider.min);
     output.textContent = displayValue;
-    output.style.left = `calc(${val * 100}% - 20px)`;
+    output.style.left = `calc(${percent * 100}% - 20px)`;
   });
 }
 
