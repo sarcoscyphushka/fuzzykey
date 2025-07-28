@@ -150,8 +150,8 @@
    <div class="slider-group-row">
   <div class="slider-label">Длина тела</div>
   <div class="slider-container">
-   <input type="range"
-       min="0.3" max="15" step="0.01" value="5"
+ <input type="range"
+       min="0.3" max="15" step="0.1" value="5"
        id="bodyLength" class="fuzzy-slider"
        data-unit="см">
     <output class="slider-value" for="bodyLength">~7.5 см</output>
@@ -183,7 +183,7 @@
       <span>твёрдая</span>
     </div>
     <label>
-  <input type="checkbox" id="consistency" checked>
+  <input type="checkbox" id="consistencyUnknown" checked>
   Не знаю
 </label>
   </div>
@@ -252,7 +252,7 @@ function updateCurrentValues() {
     if (slider.id === "consistency") {
       displayValue = val < 0.33 ? 'мягкая' : val > 0.66 ? 'твёрдая' : 'средняя';
     } else if (slider.id === "eyes") {
-      displayValue = Math.round(val).toString();
+      displayValue = Math.round(2 + val * 8).toString();
     } else {
       displayValue = `~${val.toFixed(1)} ${unit}`;
     }
@@ -264,43 +264,43 @@ function updateCurrentValues() {
   });
 }
 
-  function update() {
-    updateCurrentValues();
-    const userInput = {
-      bodyLength: getInputValue('bodyLength'),
-      bodyLengthUnknown: isUnknown('bodyLengthUnknown'),
-      consistency: getInputValue('consistency'),
-      consistencyUnknown: isUnknown('consistencyUnknown'),
-      eyes: getInputValue('eyes'),
-      eyesUnknown: isUnknown('eyesUnknown'),
-    };
+ function update() {
+  updateCurrentValues();
+  const userInput = {
+    bodyLength: getInputValue('bodyLength'),
+    bodyLengthUnknown: isUnknown('bodyLengthUnknown'),
+    consistency: getInputValue('consistency'),
+    consistencyUnknown: isUnknown('consistencyUnknown'), // исправлено!
+    eyes: getInputValue('eyes'),
+    eyesUnknown: isUnknown('eyesUnknown'),
+  };
 
-    const traitsToCheck = [];
-    if (!userInput.bodyLengthUnknown) traitsToCheck.push('bodyLength');
-    if (!userInput.consistencyUnknown) traitsToCheck.push('consistency');
-    if (!userInput.eyesUnknown) traitsToCheck.push('eyes');
+  const traitsToCheck = [];
+  if (!userInput.bodyLengthUnknown) traitsToCheck.push('bodyLength');
+  if (!userInput.consistencyUnknown) traitsToCheck.push('consistency');
+  if (!userInput.eyesUnknown) traitsToCheck.push('eyes');
 
-    if (traitsToCheck.length === 0) {
-      candidatesDiv.innerHTML = '<i>Нет данных для оценки</i>';
-      return;
-    }
-
-    const scored = leeches.map(l => {
-      let scoreSum = 0;
-      traitsToCheck.forEach(trait => {
-        scoreSum += 1 - Math.abs(userInput[trait] - l[trait]);
-      });
-      return { name: l.name, score: scoreSum / traitsToCheck.length };
-    });
-
-    scored.sort((a, b) => b.score - a.score);
-
-    candidatesDiv.innerHTML = scored
-      .filter(s => s.score > 0.3)
-      .map(s => `<div class="candidate"><span class="highlight">${s.name}</span> — уверенность ${(s.score * 100).toFixed(1)}%</div>`)
-      .join('') || '<i>Нет подходящих кандидатов</i>';
+  if (traitsToCheck.length === 0) {
+    candidatesDiv.innerHTML = '<i>Нет данных для оценки</i>';
+    return;
   }
 
+  const scored = leeches.map(l => {
+    let scoreSum = 0;
+    traitsToCheck.forEach(trait => {
+      scoreSum += 1 - Math.abs(userInput[trait] - l[trait]);
+    });
+    return { name: l.name, score: scoreSum / traitsToCheck.length };
+  });
+
+  scored.sort((a, b) => b.score - a.score);
+
+  candidatesDiv.innerHTML = scored
+    .filter(s => s.score > 0.3)
+    .map(s => `<div class="candidate"><span class="highlight">${s.name}</span> — уверенность ${(s.score * 100).toFixed(1)}%</div>`)
+    .join('') || '<i>Нет подходящих кандидатов</i>';
+}
+    
   form.addEventListener('input', update);
   document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.addEventListener('change', update));
   window.addEventListener('load', update);
