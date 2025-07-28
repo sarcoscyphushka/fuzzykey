@@ -226,7 +226,7 @@
     });
   }
 
-  function update() {
+ function update() {
     updateCurrentValues();
     const userInput = {
       bodyLength: getInputValue('bodyLength'),
@@ -258,17 +258,23 @@
         traitsCount++;
       }
 
-      return { 
-        name: l.name, 
-        score: traitsCount > 0 ? scoreSum / traitsCount : 0 
-      };
-    });
+      if (!userInput.chitinUnknown) {
+        const userChitin = parseInt(userInput.chitin);
+        // Если пользователь сказал "Да", а у вида нет пластинки - штрафуем меньше
+        if (userChitin === 1 && l.chitin === 0) {
+          scoreSum += 0.7; // Штраф за отсутствие пластинки, но не полный
+        } 
+        // Если пользователь сказал "Нет", а у вида есть пластинка - штрафуем сильнее
+        else if (userChitin === 0 && l.chitin === 1) {
+          scoreSum += 0.3; // Больший штраф
+        }
+        else {
+          scoreSum += 1; // Полное совпадение
+        }
+        traitsCount++;
+      }
 
-     if (!userInput.chitinUnknown) {
-      const userChitin = parseInt(userInput.chitin);
-      scoreSum += (userChitin === l.chitin) ? 1 : 0; // Полное совпадение даёт +1
-      traitsCount++;
-    }
+   const finalScore = traitsCount > 0 ? scoreSum / traitsCount : 0;
 
     return { 
       name: l.name, 
