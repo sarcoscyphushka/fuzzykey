@@ -98,16 +98,23 @@
       color: #006600;
       font-weight: bold;
     }
-    .binary-group-row {
-      display: flex;
-      align-items: center;
+    .binary-group {
       margin-bottom: 25px;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      border-left: 4px solid #4CAF50;
     }
-    .binary-label {
-      min-width: 200px;
-      font-size: 1.1em;
+    .binary-header {
       font-weight: bold;
-      margin-right: 20px;
+      font-size: 1.1em;
+      margin-bottom: 5px;
+    }
+    .binary-description {
+      font-size: 0.95em;
+      color: #555;
+      margin-bottom: 12px;
+      font-style: italic;
     }
     .binary-options {
       display: flex;
@@ -205,8 +212,9 @@
     </div>
 
     <!-- Хитиноидная пластинка -->
-    <div class="binary-group-row">
-      <div class="binary-label">Наличие хитиноидной пластинки</div>
+    <div class="binary-group">
+      <div class="binary-header">Наличие хитиноидной пластинки</div>
+      <div class="binary-description">Твердая пластинка на спинной стороне тела</div>
       <div class="binary-options">
         <label>
           <input type="radio" name="chitin" value="1"> Да
@@ -219,6 +227,57 @@
         </label>
       </div>
     </div>
+    
+    <!-- Полупрозрачные покровы -->
+    <div class="binary-group">
+      <div class="binary-header">Покровы полупрозрачные</div>
+      <div class="binary-description">Чуть позади переднего конца тела просвечивает тёмное окологлоточное кольцо</div>
+      <div class="binary-options">
+        <label>
+          <input type="radio" name="skinTransparency" value="1"> Да
+        </label>
+        <label>
+          <input type="radio" name="skinTransparency" value="0"> Нет
+        </label>
+        <label>
+          <input type="radio" name="skinTransparency" value="unknown" checked> Не знаю
+        </label>
+      </div>
+    </div>
+    
+    <!-- Жёлтые пятнышки -->
+    <div class="binary-group">
+      <div class="binary-header">Жёлтые или бежевые пятнышки</div>
+      <div class="binary-description">На спинной стороне тела</div>
+      <div class="binary-options">
+        <label>
+          <input type="radio" name="yellowSpots" value="1"> Да
+        </label>
+        <label>
+          <input type="radio" name="yellowSpots" value="0"> Нет
+        </label>
+        <label>
+          <input type="radio" name="yellowSpots" value="unknown" checked> Не знаю
+        </label>
+      </div>
+    </div>
+    
+    <!-- Чёрные полосы -->
+    <div class="binary-group">
+      <div class="binary-header">Две чёрные полосы</div>
+      <div class="binary-description">Идущие по спине вдоль всего тела (не путать с рядами сосочков)</div>
+      <div class="binary-options">
+        <label>
+          <input type="radio" name="blackStripes" value="1"> Да
+        </label>
+        <label>
+          <input type="radio" name="blackStripes" value="0"> Нет
+        </label>
+        <label>
+          <input type="radio" name="blackStripes" value="unknown" checked> Не знаю
+        </label>
+      </div>
+    </div>
   </form>
 
   <div class="result" id="result">
@@ -228,17 +287,38 @@
 
 <script>
   const leeches = [
-    { name: 'Helobdella stagnalis', bodyLength: 0.5, consistency: 0.5, eyes: 0, chitin: 1, flatness: 0 },
-    { name: 'Alboglossiphonia heteroclita', bodyLength: 0.5, consistency: 0.5, eyes: 0.6, chitin: 0, flatness: 0 },
-    { name: 'Theromyzon tessulatum', bodyLength: 1.5, consistency: 0, eyes: 0.75, chitin: 0, flatness: 0 },
-    { name: 'Hemiclepsis marginata', bodyLength: 1.5, consistency: 0.5, eyes: 0.25, chitin: 0, flatness: 0 },
-    { name: 'Glossiphonia complanata', bodyLength: 1.5, consistency: 1, eyes: 0.6, chitin: 0, flatness: 0 },
-    { name: 'Piscicola geometra', bodyLength: 1.5, consistency: 0.5, eyes: 0.25, chitin: 0, flatness: 1 },
-    { name: 'Erpobdella octoculata', bodyLength: 4, consistency: 0.5, eyes: 0.75, chitin: 0, flatness: 0.5 },
-    { name: 'Erpobdella nigricollis', bodyLength: 4, consistency: 0.5, eyes: 0.75, chitin: 0, flatness: 0.5 },
-    { name: 'Erpobdella lineata', bodyLength:4, consistency: 0.5, eyes: 0.75, chitin: 0, flatness: 0.5 },
-    { name: 'Haemopis sanguisuga', bodyLength: 12, consistency: 0.5, eyes: 1, chitin: 0, flatness: 0.5 },
-    { name: 'Hirudo medicinalis', bodyLength: 10, consistency: 0.5, eyes: 1, chitin: 0, flatness: 0.5 },
+    { name: 'Helobdella stagnalis', bodyLength: 0.5, consistency: 0.5, eyes: 0, chitin: 1, flatness: 0, 
+      skinTransparency: 0, yellowSpots: 0, blackStripes: 0 },
+      
+    { name: 'Alboglossiphonia heteroclita', bodyLength: 0.5, consistency: 0.5, eyes: 0.6, chitin: 0, flatness: 0, 
+      skinTransparency: 0, yellowSpots: 0, blackStripes: 0.5 },
+      
+    { name: 'Theromyzon tessulatum', bodyLength: 1.5, consistency: 0, eyes: 0.75, chitin: 0, flatness: 0, 
+      skinTransparency: 0, yellowSpots: 0, blackStripes: 0.5 },
+      
+    { name: 'Hemiclepsis marginata', bodyLength: 1.5, consistency: 0.5, eyes: 0.25, chitin: 0, flatness: 0, 
+      skinTransparency: 0, yellowSpots: 0, blackStripes: 0.5 },
+      
+    { name: 'Glossiphonia complanata', bodyLength: 1.5, consistency: 1, eyes: 0.6, chitin: 0, flatness: 0, 
+      skinTransparency: 0, yellowSpots: 0, blackStripes: 0.5 },
+      
+    { name: 'Piscicola geometra', bodyLength: 1.5, consistency: 0.5, eyes: 0.25, chitin: 0, flatness: 1, 
+      skinTransparency: 0, yellowSpots: 0, blackStripes: 0 },
+      
+    { name: 'Erpobdella octoculata', bodyLength: 4, consistency: 0.5, eyes: 0.75, chitin: 0, flatness: 0.5, 
+      skinTransparency: 0, yellowSpots: 1, blackStripes: 0 },
+      
+    { name: 'Erpobdella nigricollis', bodyLength: 4, consistency: 0.5, eyes: 0.75, chitin: 0, flatness: 0.5, 
+      skinTransparency: 1, yellowSpots: 0, blackStripes: 0 },
+      
+    { name: 'Erpobdella lineata', bodyLength:4, consistency: 0.5, eyes: 0.75, chitin: 0, flatness: 0.5, 
+      skinTransparency: 0, yellowSpots: 0, blackStripes: 1 },
+      
+    { name: 'Haemopis sanguisuga', bodyLength: 12, consistency: 0.5, eyes: 1, chitin: 0, flatness: 0.5, 
+      skinTransparency: 0, yellowSpots: 0, blackStripes: 0 },
+      
+    { name: 'Hirudo medicinalis', bodyLength: 10, consistency: 0.5, eyes: 1, chitin: 0, flatness: 0.5, 
+      skinTransparency: 0, yellowSpots: 0, blackStripes: 0 },
   ];
 
   const form = document.getElementById('keyForm');
@@ -297,8 +377,18 @@
       eyesUnknown: isUnknown('eyesUnknown'),
       flatness: getInputValue('flatness'),
       flatnessUnknown: isUnknown('flatnessUnknown'),
+      
       chitin: document.querySelector('input[name="chitin"]:checked').value,
-      chitinUnknown: document.querySelector('input[name="chitin"]:checked').value === "unknown"
+      chitinUnknown: document.querySelector('input[name="chitin"]:checked').value === "unknown",
+      
+      skinTransparency: document.querySelector('input[name="skinTransparency"]:checked').value,
+      skinTransparencyUnknown: document.querySelector('input[name="skinTransparency"]:checked').value === "unknown",
+      
+      yellowSpots: document.querySelector('input[name="yellowSpots"]:checked').value,
+      yellowSpotsUnknown: document.querySelector('input[name="yellowSpots"]:checked').value === "unknown",
+      
+      blackStripes: document.querySelector('input[name="blackStripes"]:checked').value,
+      blackStripesUnknown: document.querySelector('input[name="blackStripes"]:checked').value === "unknown"
     };
 
     const scored = leeches.map(l => {
@@ -332,13 +422,58 @@
       // Обработка хитиноидной пластинки
       if (!userInput.chitinUnknown) {
         const userChitin = parseInt(userInput.chitin);
-        // Более мягкое сравнение
         if (userChitin === 1 && l.chitin === 0) {
-          scoreSum += 0.7; // Штраф за отсутствие пластинки, но не полный
+          scoreSum += 0.7;
         } else if (userChitin === 0 && l.chitin === 1) {
-          scoreSum += 0.3; // Штраф за наличие пластинки, но не полный
+          scoreSum += 0.3;
         } else {
-          scoreSum += 1; // Полное совпадение
+          scoreSum += 1;
+        }
+        traitsCount++;
+      }
+      
+      // Обработка полупрозрачных покровов
+      if (!userInput.skinTransparencyUnknown) {
+        const userValue = parseInt(userInput.skinTransparency);
+        if (userValue === 1) {
+          // Для Erpobdella nigricollis
+          scoreSum += (l.name === 'Erpobdella nigricollis') ? 1 : 0.2;
+        } else {
+          // Для остальных
+          scoreSum += (l.name !== 'Erpobdella nigricollis') ? 1 : 0.5;
+        }
+        traitsCount++;
+      }
+      
+      // Обработка жёлтых пятнышек
+      if (!userInput.yellowSpotsUnknown) {
+        const userValue = parseInt(userInput.yellowSpots);
+        if (userValue === 1) {
+          // Для Erpobdella octoculata
+          scoreSum += (l.name === 'Erpobdella octoculata') ? 1 : 0.2;
+        } else {
+          // Для остальных
+          scoreSum += (l.name !== 'Erpobdella octoculata') ? 1 : 0.5;
+        }
+        traitsCount++;
+      }
+      
+      // Обработка чёрных полос
+      if (!userInput.blackStripesUnknown) {
+        const userValue = parseInt(userInput.blackStripes);
+        if (userValue === 1) {
+          // Для Erpobdella lineata
+          scoreSum += (l.name === 'Erpobdella lineata') ? 1 : 0.2;
+        } else {
+          // Для видов с возможными рядами сосочков
+          if (l.name === 'Erpobdella lineata') {
+            scoreSum += 0.3;
+          } else if (['Hemiclepsis marginata', 'Glossiphonia complanata', 
+                      'Alboglossiphonia heteroclita', 'Theromyzon tessulatum'].includes(l.name)) {
+            scoreSum += 0.7; // Меньший штраф
+          } else {
+            scoreSum += 1;
+          }
         }
         traitsCount++;
       }
@@ -405,7 +540,6 @@
   
   // Начальный запуск
   window.addEventListener('load', update);
-  
 </script>
 </body>
 </html>
