@@ -90,25 +90,29 @@
       color: #006600;
       font-weight: bold;
     }
-  .binary-group-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
-.binary-label {
-  min-width: 160px;
-  font-size: 1.2em;
-  font-weight: bold;
-  margin-right: 20px;
-}
-.binary-options {
-  display: flex;
-  gap: 15px;
-}
-.candidate .exact-match {
-  color: #d9534f;
-  font-weight: bold;
-}
+    .binary-group-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .binary-label {
+      min-width: 160px;
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-right: 20px;
+    }
+    .binary-options {
+      display: flex;
+      gap: 15px;
+    }
+    .exact-match {
+      color: #d9534f;
+      font-weight: bold;
+    }
+    .star {
+      color: #d9534f;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -157,21 +161,20 @@
       </div>
     </div>
 
-<div class="binary-group-row">
-  <div class="binary-label">Наличие хитиноидной пластинки</div>
-  <div class="binary-options">
-    <label>
-      <input type="radio" name="chitin" value="1" checked> Да
-    </label>
-    <label>
-      <input type="radio" name="chitin" value="0"> Нет
-    </label>
-    <label>
-      <input type="radio" name="chitin" value="unknown" checked> Не знаю
-    </label>
-  </div>
-</div>
-    
+    <div class="binary-group-row">
+      <div class="binary-label">Наличие хитиноидной пластинки</div>
+      <div class="binary-options">
+        <label>
+          <input type="radio" name="chitin" value="1"> Да
+        </label>
+        <label>
+          <input type="radio" name="chitin" value="0"> Нет
+        </label>
+        <label>
+          <input type="radio" name="chitin" value="unknown" checked> Не знаю
+        </label>
+      </div>
+    </div>
   </form>
 
   <div class="result" id="result">
@@ -182,10 +185,10 @@
 <script>
   const leeches = [
     { name: 'Helobdella stagnalis', bodyLength: 0.5, consistency: 0.5, eyes: 0, chitin: 1 },
-    { name: 'Alboglossiphonia heteroclita', bodyLength: 0.5, consistency: 0.5, eyes: 0.5, chitin: 0 },
+    { name: 'Alboglossiphonia heteroclita', bodyLength: 0.5, consistency: 0.5, eyes: 0.6, chitin: 0 },
     { name: 'Theromyzon tessulatum', bodyLength: 1.5, consistency: 0, eyes: 0.75, chitin: 0 },
     { name: 'Hemiclepsis marginata', bodyLength: 1.5, consistency: 0.5, eyes: 0.25, chitin: 0 },
-    { name: 'Glossiphonia complanata', bodyLength: 1.5, consistency: 1, eyes: 0.5, chitin: 0 },
+    { name: 'Glossiphonia complanata', bodyLength: 1.5, consistency: 1, eyes: 0.6, chitin: 0 },
     { name: 'Piscicola geometra', bodyLength: 1.5, consistency: 0.5, eyes: 0.25, chitin: 0 },
     { name: 'Erpobdella octoculata', bodyLength: 4, consistency: 0.5, eyes: 0.75, chitin: 0 },
     { name: 'Erpobdella nigricollis', bodyLength: 4, consistency: 0.5, eyes: 0.75, chitin: 0 },
@@ -226,7 +229,7 @@
     });
   }
 
- function update() {
+  function update() {
     updateCurrentValues();
     const userInput = {
       bodyLength: getInputValue('bodyLength'),
@@ -243,74 +246,76 @@
       let scoreSum = 0;
       let traitsCount = 0;
       
+      // Обработка длины тела
       if (!userInput.bodyLengthUnknown) {
         scoreSum += 1 - Math.min(1, Math.abs(userInput.bodyLength - l.bodyLength) / 15);
         traitsCount++;
       }
       
+      // Обработка консистенции
       if (!userInput.consistencyUnknown) {
         scoreSum += 1 - Math.abs(userInput.consistency - l.consistency);
         traitsCount++;
       }
       
+      // Обработка глаз
       if (!userInput.eyesUnknown) {
         scoreSum += 1 - Math.abs(userInput.eyes - l.eyes);
         traitsCount++;
       }
 
+      // Обработка хитиноидной пластинки
       if (!userInput.chitinUnknown) {
         const userChitin = parseInt(userInput.chitin);
-        // Если пользователь сказал "Да", а у вида нет пластинки - штрафуем меньше
+        // Более мягкое сравнение
         if (userChitin === 1 && l.chitin === 0) {
           scoreSum += 0.7; // Штраф за отсутствие пластинки, но не полный
-        } 
-        // Если пользователь сказал "Нет", а у вида есть пластинка - штрафуем сильнее
-        else if (userChitin === 0 && l.chitin === 1) {
-          scoreSum += 0.3; // Больший штраф
-        }
-        else {
+        } else if (userChitin === 0 && l.chitin === 1) {
+          scoreSum += 0.3; // Штраф за наличие пластинки, но не полный
+        } else {
           scoreSum += 1; // Полное совпадение
         }
         traitsCount++;
       }
 
-   const finalScore = traitsCount > 0 ? scoreSum / traitsCount : 0;
-
-    return { 
-      name: l.name, 
-      score: traitsCount > 0 ? scoreSum / traitsCount : 0,
-      exactMatch: (l.chitin === 1 && userInput.chitin === "1") // Флаг для точного совпадения
-    };
+      const finalScore = traitsCount > 0 ? scoreSum / traitsCount : 0;
+      
+      return { 
+        name: l.name, 
+        score: finalScore,
+        exactMatch: (l.chitin === 1 && userInput.chitin === "1") // Для выделения Helobdella
+      };
     });
 
-    scored.sort((a, b) => b.score - a.score);
-    if (a.exactMatch && !b.exactMatch) return -1;
-    if (!a.exactMatch && b.exactMatch) return 1;
-    return b.score - a.score;
-  });
-  
+    // Сортировка: сначала exactMatch, затем по score
+    scored.sort((a, b) => {
+      if (a.exactMatch && !b.exactMatch) return -1;
+      if (!a.exactMatch && b.exactMatch) return 1;
+      return b.score - a.score;
+    });
+
     candidatesDiv.innerHTML = scored
       .filter(s => s.score > 0.1)
       .map(s => `
-      <div class="candidate">
-        <span class="highlight">${s.name}</span>
-        ${s.exactMatch ? '⭐ ' : ''}— уверенность ${(s.score * 100).toFixed(1)}%
-      </div>`
-    ).join('') || '<i>Нет подходящих кандидатов</i>';
-}
-      .join('') || '<i>Нет подходящих кандидатов</i>';
+        <div class="candidate">
+          <span class="highlight">${s.name}</span>
+          ${s.exactMatch ? '<span class="star">⭐ </span>' : ''}— уверенность ${(s.score * 100).toFixed(1)}%
+        </div>`
+      ).join('') || '<i>Нет подходящих кандидатов</i>';
   }
 
-  // Инициализация
+  // Инициализация ползунков
   document.querySelectorAll('.slider-group-row').forEach(group => {
     const slider = group.querySelector('input[type="range"]');
     const unknownCheckbox = group.querySelector('input[type="checkbox"]');
     
+    // Начальное состояние
+    slider.disabled = unknownCheckbox.checked;
     if (unknownCheckbox.checked) {
-      slider.disabled = true;
       slider.classList.add('disabled');
     }
     
+    // Обработчик изменения чекбокса
     unknownCheckbox.addEventListener('change', () => {
       slider.disabled = unknownCheckbox.checked;
       slider.classList.toggle('disabled', unknownCheckbox.checked);
@@ -318,8 +323,16 @@
     });
   });
 
+  // Обработчики событий
   form.addEventListener('input', update);
-  document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.addEventListener('change', update));
+  document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', update);
+  });
+  document.querySelectorAll('input[type="radio"]').forEach(radio => {
+    radio.addEventListener('change', update);
+  });
+  
+  // Начальный запуск
   window.addEventListener('load', update);
 </script>
 </body>
