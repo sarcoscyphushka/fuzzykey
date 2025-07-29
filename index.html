@@ -406,12 +406,6 @@
   // Начальный запуск
   window.addEventListener('load', update);
   
-  // Плавная прокрутка к результатам
-  form.addEventListener('input', () => {
-    setTimeout(() => {
-      candidatesDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 300);
-  });
 </script>
 </body>
 </html>
