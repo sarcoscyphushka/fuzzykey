@@ -15,16 +15,17 @@
     }
     h1 {
       text-align: center;
+      margin-bottom: 30px;
     }
     .slider-group-row {
       display: flex;
       align-items: center;
       margin-bottom: 40px;
-      margin-top: 2em;
+      margin-top: 1.5em;
     }
     .slider-label {
-      min-width: 160px;
-      font-size: 1.2em;
+      min-width: 200px;
+      font-size: 1.1em;
       font-weight: bold;
       margin-right: 20px;
     }
@@ -51,11 +52,7 @@
       background: #4CAF50;
       border: 2px solid #388E3C;
       margin-top: -5px;
-    }
-    input[type="range"]::-webkit-slider-runnable-track {
-      height: 12px;
-      background: #ddd;
-      border-radius: 6px;
+      cursor: grab;
     }
     input[type=range].disabled::-webkit-slider-thumb {
       background: #aaa;
@@ -67,24 +64,35 @@
       left: 50%;
       transform: translateX(-50%);
       background-color: #eee;
-      padding: 2px 6px;
+      padding: 4px 10px;
       border-radius: 6px;
       font-size: 0.9em;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      min-width: 120px;
+      text-align: center;
     }
     .unknown-check {
       display: block;
-      margin-top: 6px;
+      margin-top: 8px;
       font-size: 0.9em;
     }
     .result {
       background: white;
-      padding: 15px;
-      border-radius: 10px;
+      padding: 20px;
+      border-radius: 12px;
       border: 1px solid #ccc;
       margin-top: 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     }
     .candidate {
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: #f9f9f9;
+      transition: background 0.3s;
+    }
+    .candidate:hover {
+      background: #f0f8ff;
     }
     .highlight {
       color: #006600;
@@ -93,11 +101,11 @@
     .binary-group-row {
       display: flex;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
     .binary-label {
-      min-width: 160px;
-      font-size: 1.2em;
+      min-width: 200px;
+      font-size: 1.1em;
       font-weight: bold;
       margin-right: 20px;
     }
@@ -105,13 +113,32 @@
       display: flex;
       gap: 15px;
     }
-    .exact-match {
-      color: #d9534f;
-      font-weight: bold;
-    }
     .star {
       color: #d9534f;
       font-weight: bold;
+      margin-right: 5px;
+    }
+    .confidence-bar {
+      height: 6px;
+      background: #e0e0e0;
+      border-radius: 3px;
+      margin-top: 5px;
+      overflow: hidden;
+    }
+    .confidence-fill {
+      height: 100%;
+      background: #4CAF50;
+      border-radius: 3px;
+    }
+    .no-results {
+      font-style: italic;
+      color: #777;
+    }
+    .trait-description {
+      font-size: 0.85em;
+      color: #666;
+      margin-top: 4px;
+      font-style: italic;
     }
   </style>
 </head>
@@ -128,7 +155,7 @@
                id="bodyLength" class="fuzzy-slider"
                data-unit="см">
         <output class="slider-value" for="bodyLength">~5.0 см</output>
-        <label>
+        <label class="unknown-check">
           <input type="checkbox" id="bodyLengthUnknown" checked>
           Не знаю
         </label>
@@ -141,7 +168,7 @@
       <div class="slider-container">
         <input type="range" min="0" max="1" step="0.01" value="0.5" id="consistency" class="fuzzy-slider">
         <output class="slider-value" for="consistency">средняя</output>
-        <label>
+        <label class="unknown-check">
           <input type="checkbox" id="consistencyUnknown" checked>
           Не знаю
         </label>
@@ -154,13 +181,30 @@
       <div class="slider-container">
         <input type="range" min="0" max="1" step="0.01" value="0.5" id="eyes" class="fuzzy-slider">
         <output class="slider-value" for="eyes">6</output>
-        <label>
+        <label class="unknown-check">
           <input type="checkbox" id="eyesUnknown" checked>
           Не знаю
         </label>
       </div>
     </div>
 
+    <!-- Уплощённость тела -->
+    <div class="slider-group-row">
+      <div class="slider-label">Уплощённость тела</div>
+      <div class="slider-container">
+        <input type="range" min="0" max="1" step="0.01" value="0.5" id="flatness" class="fuzzy-slider">
+        <output class="slider-value" for="flatness">несколько уплощённое</output>
+        <label class="unknown-check">
+          <input type="checkbox" id="flatnessUnknown" checked>
+          Не знаю
+        </label>
+        <div class="trait-description">
+          0 = листообразное, 1 = цилиндрическое
+        </div>
+      </div>
+    </div>
+
+    <!-- Хитиноидная пластинка -->
     <div class="binary-group-row">
       <div class="binary-label">Наличие хитиноидной пластинки</div>
       <div class="binary-options">
@@ -184,17 +228,17 @@
 
 <script>
   const leeches = [
-    { name: 'Helobdella stagnalis', bodyLength: 0.5, consistency: 0.5, eyes: 0, chitin: 1 },
-    { name: 'Alboglossiphonia heteroclita', bodyLength: 0.5, consistency: 0.5, eyes: 0.6, chitin: 0 },
-    { name: 'Theromyzon tessulatum', bodyLength: 1.5, consistency: 0, eyes: 0.75, chitin: 0 },
-    { name: 'Hemiclepsis marginata', bodyLength: 1.5, consistency: 0.5, eyes: 0.25, chitin: 0 },
-    { name: 'Glossiphonia complanata', bodyLength: 1.5, consistency: 1, eyes: 0.6, chitin: 0 },
-    { name: 'Piscicola geometra', bodyLength: 1.5, consistency: 0.5, eyes: 0.25, chitin: 0 },
-    { name: 'Erpobdella octoculata', bodyLength: 4, consistency: 0.5, eyes: 0.75, chitin: 0 },
-    { name: 'Erpobdella nigricollis', bodyLength: 4, consistency: 0.5, eyes: 0.75, chitin: 0 },
-    { name: 'Erpobdella lineata', bodyLength:4, consistency: 0.5, eyes: 0.75, chitin: 0 },
-    { name: 'Haemopis sanguisuga', bodyLength: 12, consistency: 0.5, eyes: 1, chitin: 0 },
-    { name: 'Hirudo medicinalis', bodyLength: 10, consistency: 0.5, eyes: 1, chitin: 0 },
+    { name: 'Helobdella stagnalis', bodyLength: 0.5, consistency: 0.5, eyes: 0, chitin: 1, flatness: 0 },
+    { name: 'Alboglossiphonia heteroclita', bodyLength: 0.5, consistency: 0.5, eyes: 0.6, chitin: 0, flatness: 0 },
+    { name: 'Theromyzon tessulatum', bodyLength: 1.5, consistency: 0, eyes: 0.75, chitin: 0, flatness: 0 },
+    { name: 'Hemiclepsis marginata', bodyLength: 1.5, consistency: 0.5, eyes: 0.25, chitin: 0, flatness: 0 },
+    { name: 'Glossiphonia complanata', bodyLength: 1.5, consistency: 1, eyes: 0.6, chitin: 0, flatness: 0 },
+    { name: 'Piscicola geometra', bodyLength: 1.5, consistency: 0.5, eyes: 0.25, chitin: 0, flatness: 1 },
+    { name: 'Erpobdella octoculata', bodyLength: 4, consistency: 0.5, eyes: 0.75, chitin: 0, flatness: 0.5 },
+    { name: 'Erpobdella nigricollis', bodyLength: 4, consistency: 0.5, eyes: 0.75, chitin: 0, flatness: 0.5 },
+    { name: 'Erpobdella lineata', bodyLength:4, consistency: 0.5, eyes: 0.75, chitin: 0, flatness: 0.5 },
+    { name: 'Haemopis sanguisuga', bodyLength: 12, consistency: 0.5, eyes: 1, chitin: 0, flatness: 0.5 },
+    { name: 'Hirudo medicinalis', bodyLength: 10, consistency: 0.5, eyes: 1, chitin: 0, flatness: 0.5 },
   ];
 
   const form = document.getElementById('keyForm');
@@ -211,20 +255,33 @@
   function updateCurrentValues() {
     document.querySelectorAll('.fuzzy-slider').forEach(slider => {
       const output = slider.parentElement.querySelector('.slider-value');
-      const unit = slider.dataset.unit || "";
       const val = parseFloat(slider.value);
-
-      let displayValue;
-      if (slider.id === "consistency") {
-        displayValue = val < 0.33 ? 'мягкая' : val > 0.66 ? 'твёрдая' : 'средняя';
-      } else if (slider.id === "eyes") {
-        displayValue = Math.round(2 + val * 8); // 0→2, 1→10
-      } else if (slider.id === "bodyLength") {
-        displayValue = `~${val.toFixed(1)} ${unit}`;
-      } else {
-        displayValue = `~${val.toFixed(1)} ${unit}`;
+      
+      let displayValue = "";
+      
+      switch(slider.id) {
+        case "consistency":
+          displayValue = val < 0.33 ? 'мягкая' : val > 0.66 ? 'твёрдая' : 'средняя';
+          break;
+          
+        case "eyes":
+          displayValue = Math.round(2 + val * 8) + " глаз";
+          break;
+          
+        case "bodyLength":
+          displayValue = `~${val.toFixed(1)} см`;
+          break;
+          
+        case "flatness":
+          if (val < 0.33) displayValue = "листообразное";
+          else if (val > 0.66) displayValue = "цилиндрическое";
+          else displayValue = "несколько уплощённое";
+          break;
+          
+        default:
+          displayValue = `${val.toFixed(2)}`;
       }
-
+      
       output.textContent = displayValue;
     });
   }
@@ -238,6 +295,8 @@
       consistencyUnknown: isUnknown('consistencyUnknown'),
       eyes: getInputValue('eyes'),
       eyesUnknown: isUnknown('eyesUnknown'),
+      flatness: getInputValue('flatness'),
+      flatnessUnknown: isUnknown('flatnessUnknown'),
       chitin: document.querySelector('input[name="chitin"]:checked').value,
       chitinUnknown: document.querySelector('input[name="chitin"]:checked').value === "unknown"
     };
@@ -261,6 +320,12 @@
       // Обработка глаз
       if (!userInput.eyesUnknown) {
         scoreSum += 1 - Math.abs(userInput.eyes - l.eyes);
+        traitsCount++;
+      }
+      
+      // Обработка уплощённости
+      if (!userInput.flatnessUnknown) {
+        scoreSum += 1 - Math.abs(userInput.flatness - l.flatness);
         traitsCount++;
       }
 
@@ -298,10 +363,16 @@
       .filter(s => s.score > 0.1)
       .map(s => `
         <div class="candidate">
-          <span class="highlight">${s.name}</span>
-          ${s.exactMatch ? '<span class="star">⭐ </span>' : ''}— уверенность ${(s.score * 100).toFixed(1)}%
+          <div>
+            <span class="highlight">${s.name}</span>
+            ${s.exactMatch ? '<span class="star">⭐</span>' : ''}
+            <div>уверенность: ${(s.score * 100).toFixed(1)}%</div>
+            <div class="confidence-bar">
+              <div class="confidence-fill" style="width: ${s.score * 100}%"></div>
+            </div>
+          </div>
         </div>`
-      ).join('') || '<i>Нет подходящих кандидатов</i>';
+      ).join('') || '<div class="no-results"><i>Нет подходящих кандидатов. Попробуйте изменить параметры.</i></div>';
   }
 
   // Инициализация ползунков
@@ -334,6 +405,13 @@
   
   // Начальный запуск
   window.addEventListener('load', update);
+  
+  // Плавная прокрутка к результатам
+  form.addEventListener('input', () => {
+    setTimeout(() => {
+      candidatesDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 300);
+  });
 </script>
 </body>
 </html>
